@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ProductDAO extends JpaRepository<Product,Integer>, Specification<Product> {
 
-    List<Product> findByCategory(String name);
+    List<Product> findProductsByCategory(String name);
 
 
     //-----------Specification---------------

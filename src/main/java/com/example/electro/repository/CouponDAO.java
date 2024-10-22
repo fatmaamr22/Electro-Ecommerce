@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CouponDAO extends JpaRepository<Coupon, Integer> {
 
-    Coupon findByName(String name);
+    Coupon findCouponByCoupon(String name);
 }

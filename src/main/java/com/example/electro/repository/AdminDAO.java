@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AdminDAO extends JpaRepository<Admin, Integer> {
 
-    Admin findByEmail(String email);
+    Admin findAdminByEmail(String email);
 }
