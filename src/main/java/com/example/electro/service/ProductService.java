@@ -6,6 +6,7 @@ import com.example.electro.model.Product;
 import com.example.electro.repository.ProductRepository;
 import jakarta.persistence.Id;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,10 +21,10 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public Product findById(Integer id){
-        return productRepository.findById(id).orElseThrow(()->new RuntimeException("Product Not Found"));
+    public ProductDTO findById(Integer id){
+        return ProductMapper.INSTANCE.toDTO(productRepository.findById(id).orElseThrow(()->new RuntimeException("Product Not Found")));
     }
-    public List<ProductDTO> findAll(){
-        return ProductMapper.INSTANCE.toDTOs(productRepository.findAll());
+    public List<ProductDTO> findAll(Specification<Product> specification){
+        return ProductMapper.INSTANCE.toDTOs(productRepository.findAll(specification));
     }
 }
