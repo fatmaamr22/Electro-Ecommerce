@@ -1,6 +1,7 @@
 package com.example.electro.controller;
 
 
+import com.example.electro.dto.ProductDTO;
 import com.example.electro.model.Product;
 import com.example.electro.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class ProductController {
     }
 
     @GetMapping
-    List<Product> findAll(){
+    List<ProductDTO> findAll(){
         return productService.findAll();
     }
 }
