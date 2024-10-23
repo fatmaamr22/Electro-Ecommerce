@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 
-public class CustomOderRepoImpl implements CustomOrderRepo{
+public class CustomOrderRepoImpl implements CustomOrderRepo{
     @PersistenceContext
     private EntityManager em;
 

@@ -25,6 +25,5 @@ public class ProductDTO {
         this.stock = product.getStock();
         this.image = product.getImage();
         this.brandName = product.getBrandName();
-
     }
 }
