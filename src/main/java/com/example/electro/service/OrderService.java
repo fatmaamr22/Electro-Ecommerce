@@ -1,17 +1,50 @@
 package com.example.electro.service;
 
-import com.laptop.dao.CouponDAO;
-import com.laptop.dao.OrderDAO;
-import com.laptop.entity.*;
-import com.laptop.enums.OrderState;
+import com.example.electro.enums.OrderState;
+import com.example.electro.model.*;
+import com.example.electro.repository.CouponDAO;
+import com.example.electro.repository.CustomerDAO;
+import com.example.electro.repository.OrderDAO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.*;
 
-public class OrderServiceImpl{
-    private final OrderDAO orderDAO = new OrderDAO();
-    private final CouponDAO couponDAO = new CouponDAO();
+public class OrderService {
+    private OrderDAO orderDAO;
+    private CouponDAO couponDAO;
+    private CustomerDAO customerDAO;
+    private CouponService couponService;
 
-    @Override
+    public OrderService(OrderDAO orderDAO, CouponDAO couponDAO, CustomerDAO customerDAO) {
+        this.orderDAO = orderDAO;
+        this.couponDAO = couponDAO;
+        this.customerDAO = customerDAO;
+    }
+
+    public List<Order> getAllOrders(int pageNo, int size) {
+        Page<Order> orders = orderDAO.findAll(PageRequest.of(pageNo, size));
+        return orders.getContent();
+    }
+
+    public Long countOrders(){
+        return orderDAO.count();
+    }
+
+    public Order getOrderById(int id) {
+        return orderDAO.findById(id).get();
+    }
+
+    public List<Order> getOrdersbyCustomerId(int customerId, int pageNo, int size) {
+        Customer customer = customerDAO.findById(customerId).get();
+        Page<Order> orders = orderDAO.findAllOrdersByCustomerId(customerId, PageRequest.of(pageNo, size));
+        return orders.getContent();
+    }
+
+    public List<Order> getOrdersbyCouponName(String couponName) {
+        return orderDAO.findOrdersByCoupon(couponName);
+    }
+
     public synchronized Order addOrder(Customer customer, String coupon) {
         Set<CartHasProduct> cartHasProducts = customer.getCart().getCartHasProducts();
         Product product = null;
@@ -40,7 +73,7 @@ public class OrderServiceImpl{
                 order.setTotalPrice((cartHasProduct.getProduct().getPrice()*cartHasProduct.getQuantity()) + order.getTotalPrice());
             }
             if (!coupon.isEmpty()) {
-                Coupon c = couponDAO.findByName(coupon);
+                Coupon c = couponDAO.findCouponByCoupon(coupon);
                 if (c != null) {
                     if(c.getEndDate().before(new Date())) {
                         System.out.println("Coupon is Expired");
@@ -63,49 +96,5 @@ public class OrderServiceImpl{
             throw new RuntimeException("No Enough Stock for " + product.getName());
         }
     }
-
-    @Override
-    public Order getOrder(int id) {
-        Order order = orderDAO.findById(id);
-        return order;
-    }
-
-    @Override
-    public List<Order> getOrders(int page, int size) {
-        List<Order> orders = orderDAO.findAll(page, size);
-        return orders;
-    }
-
-    @Override
-    public Order updateOrderState(int id, OrderState state) {
-        Order order = orderDAO.findById(id);
-        order.setState(state);
-        return orderDAO.update(order);
-    }
-
-    @Override
-    public List<Order> getOrdersByFilter(int page, int size, Map<String, Object> filter) {
-        List<Order> orders = orderDAO.find(filter,page,size);
-        return orders;
-    }
-
-    public List<Order> getOrdersbyCustomerId(int customerId) {
-        CustomerService customerService = new CustomerService();
-        Customer customer = customerService.findById(customerId);
-        List<Order> orders = customer.getOrders().stream().toList();
-        return orders;
-
-    }
-
-    public void deleteOrder(int id) {
-        Order order = orderDAO.findById(id);
-        orderDAO.delete(order);
-    }
-
-    public Long countAllOrders(int page, int size, Map<String, Object> filter) {
-        Long count = orderDAO.countOrders(filter,page,size);
-        return count;
-    }
-
 
 }

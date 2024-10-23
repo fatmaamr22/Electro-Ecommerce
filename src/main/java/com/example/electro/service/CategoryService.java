@@ -5,7 +5,7 @@ import com.laptop.entity.Category;
 
 import java.util.List;
 
-public class CategoryServiceImpl{
+public class CategoryService {
     private final CategoryDAO categoryDAO = new CategoryDAO();
     @Override
     public Category addCategory(Category category) {
