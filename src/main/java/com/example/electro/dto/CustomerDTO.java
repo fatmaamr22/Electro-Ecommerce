@@ -12,7 +12,7 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CustomerDTO implements Serializable {
+public class CustomerDTO {
     private Integer id;
 
     private String firstName;

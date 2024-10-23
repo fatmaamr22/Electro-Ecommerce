@@ -1,6 +1,8 @@
 package com.example.electro.service;
 
+import com.example.electro.dto.OrderDTO;
 import com.example.electro.enums.OrderState;
+import com.example.electro.mapper.OrderMapper;
 import com.example.electro.model.*;
 import com.example.electro.repository.CouponRepository;
 import com.example.electro.repository.CustomerRepository;
@@ -18,7 +20,6 @@ public class OrderService {
     private OrderRepository orderRepo;
     private CouponRepository couponRepo;
     private CustomerRepository customerRepo;
-    private CouponService couponService;
     private CartService cartService;
 
     @Autowired
@@ -29,17 +30,18 @@ public class OrderService {
         this.cartService = cartService;
     }
 
-    public List<Order> getAllOrders(int pageNo, int size) {
+    public List<OrderDTO> getAllOrders(int pageNo, int size) {
         Page<Order> orders = orderRepo.findAll(PageRequest.of(pageNo, size));
-        return orders.getContent();
+        return OrderMapper.INSTANCE.toDTOs(orders.getContent());
+//        return orders.getContent();
     }
 
     public Long countOrders(){
         return orderRepo.count();
     }
 
-    public Order getOrderById(int id) {
-        return orderRepo.findById(id).get();
+    public OrderDTO getOrderById(int id) {
+        return OrderMapper.INSTANCE.toDTO(orderRepo.findById(id).get());
     }
 
     public List<Order> getOrdersbyCustomerId(int customerId, int pageNo, int size) {
