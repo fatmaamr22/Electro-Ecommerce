@@ -11,9 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 
 @SpringBootApplication
-@EnableJpaRepositories
-@ComponentScan(basePackages = {"com.example.electro.service", "com.example.electro.repository"}) // Only scan service and repository
-
 public class ElectroApplication {
 
 	public static void main(String[] args) {
