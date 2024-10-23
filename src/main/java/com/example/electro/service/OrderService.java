@@ -2,47 +2,46 @@ package com.example.electro.service;
 
 import com.example.electro.enums.OrderState;
 import com.example.electro.model.*;
-import com.example.electro.repository.CouponDAO;
-import com.example.electro.repository.CustomerDAO;
-import com.example.electro.repository.OrderDAO;
+import com.example.electro.repository.CouponRepository;
+import com.example.electro.repository.CustomerRepository;
+import com.example.electro.repository.OrderRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-
 import java.util.*;
 
 public class OrderService {
-    private OrderDAO orderDAO;
-    private CouponDAO couponDAO;
-    private CustomerDAO customerDAO;
+    private OrderRepository orderRepo;
+    private CouponRepository couponRepo;
+    private CustomerRepository customerRepo;
     private CouponService couponService;
 
-    public OrderService(OrderDAO orderDAO, CouponDAO couponDAO, CustomerDAO customerDAO) {
-        this.orderDAO = orderDAO;
-        this.couponDAO = couponDAO;
-        this.customerDAO = customerDAO;
+    public OrderService(OrderRepository orderRepo, CouponRepository couponRepo, CustomerRepository customerRepo) {
+        this.orderRepo = orderRepo;
+        this.couponRepo = couponRepo;
+        this.customerRepo = customerRepo;
     }
 
     public List<Order> getAllOrders(int pageNo, int size) {
-        Page<Order> orders = orderDAO.findAll(PageRequest.of(pageNo, size));
+        Page<Order> orders = orderRepo.findAll(PageRequest.of(pageNo, size));
         return orders.getContent();
     }
 
     public Long countOrders(){
-        return orderDAO.count();
+        return orderRepo.count();
     }
 
     public Order getOrderById(int id) {
-        return orderDAO.findById(id).get();
+        return orderRepo.findById(id).get();
     }
 
     public List<Order> getOrdersbyCustomerId(int customerId, int pageNo, int size) {
-        Customer customer = customerDAO.findById(customerId).get();
-        Page<Order> orders = orderDAO.findAllOrdersByCustomerId(customerId, PageRequest.of(pageNo, size));
+        Customer customer = customerRepo.findById(customerId).get();
+        Page<Order> orders = orderRepo.findAllOrdersByCustomerId(customerId, PageRequest.of(pageNo, size));
         return orders.getContent();
     }
 
     public List<Order> getOrdersbyCouponName(String couponName) {
-        return orderDAO.findOrdersByCoupon(couponName);
+        return orderRepo.findOrdersByCoupon(couponName);
     }
 
     public synchronized Order addOrder(Customer customer, String coupon) {
@@ -73,7 +72,7 @@ public class OrderService {
                 order.setTotalPrice((cartHasProduct.getProduct().getPrice()*cartHasProduct.getQuantity()) + order.getTotalPrice());
             }
             if (!coupon.isEmpty()) {
-                Coupon c = couponDAO.findCouponByCoupon(coupon);
+                Coupon c = couponRepo.findCouponByCoupon(coupon);
                 if (c != null) {
                     if(c.getEndDate().before(new Date())) {
                         System.out.println("Coupon is Expired");
@@ -90,7 +89,7 @@ public class OrderService {
             order.setState(OrderState.PENDING);
             CartService cartService = new CartService();
             cartService.emptyCart(customer.getId());
-            return orderDAO.saveOrder(order, orderItems);
+            return orderRepo.saveOrder(order, orderItems);
         } else {
             System.out.println("No Enough Stock for " + product.getName());
             throw new RuntimeException("No Enough Stock for " + product.getName());

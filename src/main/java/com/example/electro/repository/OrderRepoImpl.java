@@ -6,11 +6,10 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Set;
 
 @Repository
-public abstract class OrderRepoImpl implements OrderDAO{
+public abstract class OrderRepoImpl implements OrderRepository {
     @PersistenceContext
     private EntityManager em;
 

@@ -1,49 +1,47 @@
 package com.example.electro.service;
 
 import com.example.electro.model.Coupon;
-import com.example.electro.model.Order;
-import com.example.electro.repository.CouponDAO;
-
+import com.example.electro.repository.CouponRepository;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 public class CouponService {
-    private CouponDAO couponDAO;
+    private CouponRepository couponRepo;
 
-    public CouponService(CouponDAO couponDAO) {
-        this.couponDAO = couponDAO;
+    public CouponService(CouponRepository couponRepo) {
+        this.couponRepo = couponRepo;
     }
 
     public Coupon addCoupon(Coupon coupon) {
-        return couponDAO.save(coupon);
+        return couponRepo.save(coupon);
     }
 
     public void deleteCoupon(Coupon coupon) {
-        couponDAO.delete(coupon);
+        couponRepo.delete(coupon);
     }
 
     public Coupon updateCoupon(Coupon coupon) {
-        return couponDAO.save(coupon);
+        return couponRepo.save(coupon);
     }
 
     public Optional<Coupon> findCouponById(int id) {
-        Optional<Coupon> c = couponDAO.findById(id);
+        Optional<Coupon> c = couponRepo.findById(id);
         return c;
     }
 
     public List<Coupon> findAllCoupons() {
-        return couponDAO.findAll();
+        return couponRepo.findAll();
     }
 
     public Coupon findCouponByName(String name) {
-        Coupon c = couponDAO.findCouponByCoupon(name);
+        Coupon c = couponRepo.findCouponByCoupon(name);
         return c;
     }
 
     public List<Integer> getCouponInfo(String couponName){
-        Coupon coupon = couponDAO.findCouponByCoupon(couponName);
+        Coupon coupon = couponRepo.findCouponByCoupon(couponName);
         List<Integer> info = new ArrayList<>();
         info.add(coupon.getPercentage());
         info.add(coupon.getLimitPayment());
@@ -51,7 +49,7 @@ public class CouponService {
     }
 
     public boolean validateCoupon(String couponName){
-        Coupon coupon = couponDAO.findCouponByCoupon(couponName);
+        Coupon coupon = couponRepo.findCouponByCoupon(couponName);
         if (coupon != null){
             if(coupon.getEndDate().before(new Date())) {
                 return false;
