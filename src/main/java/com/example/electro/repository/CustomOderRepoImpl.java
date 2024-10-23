@@ -4,12 +4,11 @@ import com.example.electro.model.Order;
 import com.example.electro.model.OrderItem;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Set;
 
-@Repository
-public abstract class OrderRepoImpl implements OrderRepository {
+public class CustomOderRepoImpl implements CustomOrderRepo{
     @PersistenceContext
     private EntityManager em;
 

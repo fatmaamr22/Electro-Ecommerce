@@ -5,20 +5,28 @@ import com.example.electro.model.*;
 import com.example.electro.repository.CouponRepository;
 import com.example.electro.repository.CustomerRepository;
 import com.example.electro.repository.OrderRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+
 import java.util.*;
 
+@Service
 public class OrderService {
     private OrderRepository orderRepo;
     private CouponRepository couponRepo;
     private CustomerRepository customerRepo;
     private CouponService couponService;
+    private CartService cartService;
 
-    public OrderService(OrderRepository orderRepo, CouponRepository couponRepo, CustomerRepository customerRepo) {
+    @Autowired
+    public OrderService(OrderRepository orderRepo, CouponRepository couponRepo, CustomerRepository customerRepo, CartService cartService) {
         this.orderRepo = orderRepo;
         this.couponRepo = couponRepo;
         this.customerRepo = customerRepo;
+        this.cartService = cartService;
     }
 
     public List<Order> getAllOrders(int pageNo, int size) {
@@ -87,7 +95,6 @@ public class OrderService {
                 }
             }
             order.setState(OrderState.PENDING);
-            CartService cartService = new CartService();
             cartService.emptyCart(customer.getId());
             return orderRepo.saveOrder(order, orderItems);
         } else {
