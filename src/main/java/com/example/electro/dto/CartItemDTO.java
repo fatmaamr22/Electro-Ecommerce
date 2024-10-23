@@ -8,14 +8,14 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ItemDTO {
+public class CartItemDTO {
     private Integer id;
     private String name;
     private int price;
     private String image;
     private int quantity;
 
-    public ItemDTO(CartHasProduct item){
+    public CartItemDTO(CartHasProduct item){
         this.quantity = item.getQuantity();
         this.id = item.getProduct().getId();
         this.name = item.getProduct().getName();
