@@ -1,7 +1,7 @@
 function addToCart(itemId, buyQuantity, action) {
                                                 // Make the asynchronous request to the server
                                                 $.ajax({
-                                                    url: 'addCartItem', // Servlet URL
+                                                    url: '/cart/' + itemId + '/' + buyQuantity, // Updated URL with path variables
                                                     type: 'POST',
                                                     data: {
                                                         id: itemId,

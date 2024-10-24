@@ -4,12 +4,17 @@ import com.example.electro.dto.CartItemDTO;
 import com.example.electro.service.CartService;
 import com.example.electro.service.TemporaryCartService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpSession;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/cart")
@@ -34,23 +39,35 @@ public class CartController {
     private int getAuthenticatedCustomerId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        // Assuming the customerId is stored in the username or you can map it from a custom UserDetails service
+        // Assuming the customerId is stored in the username
         return Integer.parseInt(userDetails.getUsername());
     }
 
     // Get all cart items for authenticated user or guest session cart
     @GetMapping
-    public List<CartItemDTO> getCartItems(HttpSession session) {
+    public String getCartItems(HttpSession session) {
+        List<CartItemDTO> cartProducts = new ArrayList<>();
         if (isUserAuthenticated()) {
             int customerId = getAuthenticatedCustomerId();
-            return cartService.getCartItems(customerId);
+            cartProducts = cartService.getCartItems(customerId);
         } else {
-            return temporaryCartService.getCartItems(session);
+            cartProducts = temporaryCartService.getCartItems(session);
+        }
+        return "cart";
+    }
+
+    // Merges the guest cart into the persisted authenticated user's cart, must be invoked after the authenticated user's id already in the security context
+    @PostMapping
+    public void mergeCarts(HttpSession session){
+        if (isUserAuthenticated()) {
+            int customerId = getAuthenticatedCustomerId();
+            temporaryCartService.mergeCarts(session, customerId);
+        } else {
         }
     }
 
     // Add an item to the cart (authenticated or guest)
-    @PostMapping("/add/{productId}")
+    @PostMapping("/{productId}")
     public void addCartItem(@PathVariable int productId, HttpSession session) {
         if (isUserAuthenticated()) {
             int customerId = getAuthenticatedCustomerId();
@@ -60,26 +77,54 @@ public class CartController {
         }
     }
 
+    // Add an item to the cart with a specified quantity (authenticated or guest)
+    @PostMapping("/{productId}/{quantity}")
+    public Map<String, Integer> addCartItemWithQuantity(@PathVariable int productId, @PathVariable int quantity, HttpSession session) {
+
+        boolean added;
+        if (isUserAuthenticated()) {
+            int customerId = getAuthenticatedCustomerId();
+            added = cartService.addCartItemWithQuantity(customerId, productId, quantity);
+        } else {
+            added = temporaryCartService.addCartItemWithQuantity(session, productId, quantity);
+        }
+
+        Map<String, Integer> response = new HashMap<>();
+        response.put("succeeded", added ? 1 : -1);
+        return response;
+    }
+
     // Remove an item from the cart (authenticated or guest)
-    @DeleteMapping("/remove/{productId}")
-    public void removeCartItem(@PathVariable int productId, HttpSession session) {
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<Void> removeCartItem(@PathVariable("productId") int productId, HttpSession session) {
         if (isUserAuthenticated()) {
             int customerId = getAuthenticatedCustomerId();
             cartService.removeCartItem(customerId, productId);
         } else {
-            temporaryCartService.removeCartItem(session, productId);
+            temporaryCartService.removeCartItem(session, productId); // Remove from the guest user's session-based cart
         }
+        return ResponseEntity.ok().build();
     }
 
+
     // Set the quantity of an item in the cart (authenticated or guest)
-    @PutMapping("/set/{productId}/{quantity}")
-    public void setCartItemQuantity(@PathVariable int productId, @PathVariable int quantity, HttpSession session) {
+    @PutMapping("/{productId}/{quantity}")
+    public Map<String, Integer> updateQuantity(@PathVariable int productId, @PathVariable int quantity, HttpSession session) {
+        boolean updated;
+        CartItemDTO updatedItem;
         if (isUserAuthenticated()) {
             int customerId = getAuthenticatedCustomerId();
-            cartService.setCartItemQuantity(customerId, productId, quantity);
+            updated = cartService.setCartItemQuantity(customerId, productId, quantity);
+            updatedItem = cartService.getItem(customerId , productId);
         } else {
-            temporaryCartService.setCartItemQuantity(session, productId, quantity);
+            updated = temporaryCartService.setCartItemQuantity(session, productId, quantity);
+            updatedItem = temporaryCartService.getItem(session, productId);
         }
+
+        int newTotal = updatedItem.getPrice() * updatedItem.getQuantity();
+        Map<String, Integer> response = new HashMap<>();
+        response.put("newTotal", updated ? newTotal : -1);
+        return response;
     }
 
 }

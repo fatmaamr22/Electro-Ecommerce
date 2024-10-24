@@ -107,6 +107,20 @@ public class TemporaryCartService {
         emptyCart(session);
     }
 
+    public CartItemDTO getItem(HttpSession session, int productId) {
+        TemporaryCart cart = getOrCreateCart(session);
+
+        // Iterate through the cart's products to find the matching product ID
+        for (CartHasProduct item : cart.getCartHasProducts()) {
+            if (item.getCartHasProductID().getProductId().equals(productId)) {
+                // Create and return a CartItemDTO for the found item
+                return new CartItemDTO(item);
+            }
+        }
+
+        // If no item is found, return null or throw an exception if required
+        return null;
+    }
 
     // Empties the temporary cart
     public void emptyCart(HttpSession session) {
