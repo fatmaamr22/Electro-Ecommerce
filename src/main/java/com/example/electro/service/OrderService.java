@@ -31,7 +31,8 @@ public class OrderService {
     }
 
     public List<OrderDTO> getAllOrders(int pageNo, int size) {
-        Page<Order> orders = orderRepo.findAll(PageRequest.of(pageNo, size));
+        int page = (pageNo > 0) ? pageNo - 1 : 0;
+        Page<Order> orders = orderRepo.findAll(PageRequest.of(page, size));
         return OrderMapper.INSTANCE.toDTOs(orders.getContent());
     }
 

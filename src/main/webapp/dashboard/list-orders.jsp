@@ -42,7 +42,8 @@
         <td>${orders.date}</td>
         <td>${orders.state}</td>
         <td>
-          <button class="btn btn-success" onclick="window.location.href='/ecommerce/dashboard/order?id=${orders.id}'">View</button>
+<%--          <button class="btn btn-success" onclick="window.location.href='/ecommerce/dashboard/order?id=${orders.id}'">View</button>--%>
+              <button class="btn btn-success" onclick="window.location.href='/dashboard/orders/${orders.id}'">View</button>
         </td>
       </tr>
     </c:forEach>
@@ -71,30 +72,6 @@
   </nav>
 </section>
 
-<script>
-  // Confirm delete action
-  function confirmDelete(productId) {
-    const isConfirmed = confirm("Are you sure you want to delete this product?");
-    if (isConfirmed) {
-      deleteProduct(productId);
-    }
-  }
-
-  // Function to delete the product
-  function deleteProduct(productId) {
-    fetch(`/ecommerce/dashboard/delete-product?id=`+productId, {
-      method: 'GET',
-    }).then(response => {
-      if (response.ok) {
-        // If delete is successful, reload the page
-        alert('Product deleted successfully');
-        window.location.reload();
-      } else {
-        alert('Failed to delete the product');
-      }
-    });
-  }
-</script>
 
 <script src="../assets/js/vendor/jquery-2.2.4.min.js"></script>
 <script src="../assets/js/vendor/bootstrap.min.js"></script>

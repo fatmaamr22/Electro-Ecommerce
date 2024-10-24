@@ -11,7 +11,7 @@
             <div class="container">
                 <!-- Brand and toggle get grouped for better mobile display -->
                 <div class="logo-container">
-                    <a class="navbar-brand logo_h" href="#"><img src="../assets/img/electro-logo.png" alt="" class="logo-image"></a>
+                    <a class="navbar-brand logo_h" href="#"><img src="/../assets/img/electro-logo.png" alt="" class="logo-image"></a>
                 </div>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -28,7 +28,7 @@
                             <ul class="dropdown-menu">
                                 <li class="nav-item"><a class="nav-link" href="customers">Customers</a></li>
                                 <li class="nav-item"><a class="nav-link" href="products">Products</a></li>
-                                <li class="nav-item"><a class="nav-link" href="orders">Orders</a></li>
+                                <li class="nav-item"><a class="nav-link" href="/dashboard/orders">Orders</a></li>
                             </ul>
                         </li>
                         <c:choose>
