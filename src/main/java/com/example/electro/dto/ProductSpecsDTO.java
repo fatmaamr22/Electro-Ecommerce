@@ -1,9 +1,13 @@
 package com.example.electro.dto;
 
+import com.example.electro.model.Image;
 import com.example.electro.model.ProductSpecs;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -19,15 +23,4 @@ public class ProductSpecsDTO {
     private String os;
     private double weight;
 
-    public ProductSpecsDTO(ProductSpecs productSpecs){
-        this.id = productSpecs.getId();
-        this.processor = productSpecs.getProcessor();
-        this.memory = productSpecs.getMemory();
-        this.storage = productSpecs.getStorage();
-        this.graphicsCard = productSpecs.getGraphicsCard();
-        this.displaySize = productSpecs.getDisplaySize();
-        this.batteryLife = productSpecs.getBatteryLife();
-        this.os = productSpecs.getOs();
-        this.weight = productSpecs.getWeight();
-    }
 }
