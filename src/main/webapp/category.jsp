@@ -88,7 +88,7 @@
 							<c:if test="${categoryList != null}">
 								<c:forEach items="${categoryList}" var="category">
 									<li class="filter-list"><input
-											class="pixel-radio" type="radio" id="category-${category.getId()}"
+											class="pixel-radio" type="checkbox" id="category-${category.getId()}"
 											name="category" value="${category.getId()}">
 										<label for="category-${category.getId()}">${category.getName()}</label></li>
 								</c:forEach>
@@ -99,7 +99,7 @@
 							<c:if test="${brandList != null}">
 								<c:forEach items="${brandList}" var="brand">
 									<li class="filter-list"><input
-											class="pixel-radio" type="radio" id="brand-${brand}"
+											class="pixel-radio" type="checkbox" id="brand-${brand}"
 											name="brand" value="${brand}">
 										<label for="brand-${brand}">${brand}</label></li>
 								</c:forEach>
@@ -110,7 +110,7 @@
 							<c:if test="${processorList != null}">
 								<c:forEach items="${processorList}" var="processor">
 									<li class="filter-list"><input
-											class="pixel-radio" type="radio" id="processor-${processor}"
+											class="pixel-radio" type="checkbox" id="processor-${processor}"
 											name="processor" value="${processor}">
 										<label for="processor-${processor}">${processor}</label></li>
 								</c:forEach>
@@ -121,7 +121,7 @@
 							<c:if test="${memoryList != null}">
 								<c:forEach items="${memoryList}" var="memory">
 									<li class="filter-list"><input
-											class="pixel-radio" type="radio" id="memory-${memory}"
+											class="pixel-radio" type="checkbox" id="memory-${memory}"
 											name="memory" value="${memory}">
 										<label for="memory-${memory}">${memory}</label></li>
 								</c:forEach>
@@ -132,7 +132,7 @@
 							<c:if test="${osList != null}">
 								<c:forEach items="${osList}" var="os">
 									<li class="filter-list"><input
-											class="pixel-radio" type="radio" id="os-${os}"
+											class="pixel-radio" type="checkbox" id="os-${os}"
 											name="os" value="${os}">
 										<label for="os-${os}">${os}</label></li>
 								</c:forEach>

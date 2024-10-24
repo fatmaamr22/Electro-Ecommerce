@@ -15,7 +15,7 @@ import java.util.List;
 
 public class ProductSpecification {
     public static Specification<Product> withFilters(List<Integer> categories, List<String> brands,
-                                                     List<String> processors, List<Integer> memoryOptions,
+                                                     List<String> processors,List<String> operatingSystem, List<Integer> memoryOptions,
                                                      Integer minPrice, Integer maxPrice) {
         return (Root<Product> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
@@ -34,6 +34,10 @@ public class ProductSpecification {
             if (processors != null && !processors.isEmpty()) {
                 Join<Object, Object> specsJoin = root.join("specs", JoinType.INNER);
                 predicates.add(specsJoin.get("processor").in(processors));
+            }
+            if (operatingSystem != null && !operatingSystem.isEmpty()) {
+                Join<Object, Object> specsJoin = root.join("specs", JoinType.INNER);
+                predicates.add(specsJoin.get("os").in(operatingSystem));
             }
 
             // Filter by Memory from ProductSpecs
