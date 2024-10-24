@@ -8,11 +8,15 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
 
 import java.util.HashMap;
 import java.util.List;
 
+import static org.springframework.data.web.config.EnableSpringDataWebSupport.PageSerializationMode.VIA_DTO;
+
 @SpringBootApplication
+@EnableSpringDataWebSupport
 public class ElectroApplication extends SpringBootServletInitializer {
 
 	@Override

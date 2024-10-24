@@ -223,8 +223,8 @@
                 images: imageUrls.length ? imageUrls : []
             };
 
-            fetch('/ecommerce/dashboard/update-product', {
-                method: 'POST',
+            fetch(`products/${document.querySelector('input[name="id"]').value}`, {
+                method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
             }).then(response => {

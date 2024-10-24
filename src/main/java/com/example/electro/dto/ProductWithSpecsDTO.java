@@ -1,5 +1,6 @@
 package com.example.electro.dto;
 
+import com.example.electro.mapper.CategoryMapper;
 import com.example.electro.model.Image;
 import com.example.electro.model.Product;
 import lombok.Getter;
@@ -31,7 +32,7 @@ public class ProductWithSpecsDTO {
         this.stock = product.getStock();
         this.brandName = product.getBrandName();
         this.specs = new ProductSpecsDTO(product.getSpecs());
-        this.category = new CategoryDTO(product.getCategory());
+        this.category = CategoryMapper.Instance.toDTO(product.getCategory());
         images.add(product.getImage());
         for(Image image:product.getImages()){
             images.add(image.getUrl());
