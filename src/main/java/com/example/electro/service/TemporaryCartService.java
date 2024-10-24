@@ -22,15 +22,15 @@ public class TemporaryCartService {
 
     private final CartRepository cartDAO;
     private final ProductRepository productDAO;
-    private final CartHasProductRepository cartHasProductDAO;
+    private final CartService cartService;
 
     private static final String SESSION_CART_ATTRIBUTE = "temporaryCart";
 
     @Autowired
-    public TemporaryCartService(ProductRepository productDAO, CartHasProductRepository cartHasProductDAO, CartRepository cartDAO) {
+    public TemporaryCartService(ProductRepository productDAO, CartRepository cartDAO, CartService cartService) {
         this.cartDAO = cartDAO;
         this.productDAO = productDAO;
-        this.cartHasProductDAO = cartHasProductDAO;
+        this.cartService = cartService;
     }
 
     // Retrieve or create a temporary cart for the session
@@ -99,49 +99,14 @@ public class TemporaryCartService {
 
         if (cartOptional.isPresent() && temporaryCart.getCartHasProducts().size() > 0) {
             // looping over temporary cart items and adding them to them or their quantities to the persisted registered user's cart
-            for (CartHasProduct cartHasProduct :  temporaryCart.getCartHasProducts()) {
-                mergeCartItemWithQuantity(customerId, cartHasProduct.getCartHasProductID().getProductId(), cartHasProduct.getQuantity());
+            for (CartHasProduct tempCartHasProduct :  temporaryCart.getCartHasProducts()) {
+                cartService.addCartItemWithQuantity(customerId, tempCartHasProduct.getCartHasProductID().getProductId(), tempCartHasProduct.getQuantity());
             }
         }
 
         emptyCart(session);
     }
 
-    public boolean mergeCartItemWithQuantity(int customerId, int productId, int quantity) {
-        Optional<Cart> cartOptional = cartDAO.findById(customerId);
-        Optional<Product> productOptional = productDAO.findById(productId);
-
-        if (cartOptional.isPresent() && productOptional.isPresent()) {
-            Cart cart = cartOptional.get();
-            Product product = productOptional.get();
-
-            // Find if the product is already in the cart
-            CartHasProductID cartHasProductID = new CartHasProductID();
-            cartHasProductID.setCartId(cart.getId());
-            cartHasProductID.setProductId(product.getId());
-
-            Optional<CartHasProduct> existingCartProductOptional = cartHasProductDAO.findById(cartHasProductID);
-
-            CartHasProduct cartHasProduct;
-            if (existingCartProductOptional.isPresent()) {
-                // If the product is already in the cart, add to the existing quantity
-                cartHasProduct = existingCartProductOptional.get();
-                cartHasProduct.setQuantity(cartHasProduct.getQuantity() + quantity);
-            } else {
-                // If the product is not in the cart, create a new entry
-                cartHasProduct = new CartHasProduct();
-                cartHasProduct.setCartHasProductID(cartHasProductID);
-                cartHasProduct.setCart(cart);
-                cartHasProduct.setProduct(product);
-                cartHasProduct.setQuantity(quantity);
-            }
-
-            cartHasProductDAO.save(cartHasProduct);
-            return true;
-        }
-
-        return false; // Cart or Product not found
-    }
 
     // Empties the temporary cart
     public void emptyCart(HttpSession session) {

@@ -11,7 +11,19 @@ public class TemporaryCart {
     }
 
     public void addProduct(CartHasProduct cartHasProduct) {
-        cartHasProducts.add(cartHasProduct);
+        // If product already exists in the cart, increment its quantity
+        if (cartHasProducts.contains(cartHasProduct)) {
+            // Find the existing product and update its quantity
+            for (CartHasProduct existingProduct : cartHasProducts) {
+                if (existingProduct.equals(cartHasProduct)) {
+                    existingProduct.setQuantity(existingProduct.getQuantity() + cartHasProduct.getQuantity());
+                    break;
+                }
+            }
+        } else {
+            // If product is not already in the cart, add it
+            cartHasProducts.add(cartHasProduct);
+        }
     }
 
     public void removeProduct(CartHasProduct cartHasProduct) {

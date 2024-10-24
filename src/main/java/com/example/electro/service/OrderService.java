@@ -31,9 +31,9 @@ public class OrderService {
     }
 
     public List<OrderDTO> getAllOrders(int pageNo, int size) {
-        Page<Order> orders = orderRepo.findAll(PageRequest.of(pageNo, size));
+        int page = (pageNo > 0) ? pageNo - 1 : 0;
+        Page<Order> orders = orderRepo.findAll(PageRequest.of(page, size));
         return OrderMapper.INSTANCE.toDTOs(orders.getContent());
-//        return orders.getContent();
     }
 
     public Long countOrders(){
@@ -44,14 +44,14 @@ public class OrderService {
         return OrderMapper.INSTANCE.toDTO(orderRepo.findById(id).get());
     }
 
-    public List<Order> getOrdersbyCustomerId(int customerId, int pageNo, int size) {
+    public List<OrderDTO> getOrdersbyCustomerId(int customerId, int pageNo, int size) {
         Customer customer = customerRepo.findById(customerId).get();
         Page<Order> orders = orderRepo.findAllOrdersByCustomerId(customerId, PageRequest.of(pageNo, size));
-        return orders.getContent();
+        return OrderMapper.INSTANCE.toDTOs(orders.getContent());
     }
 
-    public List<Order> getOrdersbyCouponName(String couponName) {
-        return orderRepo.findOrdersByCoupon(couponName);
+    public List<OrderDTO> getOrdersbyCouponName(String couponName) {
+        return OrderMapper.INSTANCE.toDTOs(orderRepo.findOrdersByCoupon(couponName));
     }
 
     public synchronized Order addOrder(Customer customer, String coupon) {

@@ -38,6 +38,7 @@ public class CartService {
         addCartItemWithQuantity(customerId, productId, 1);
     }
 
+    /*
     // Adds an item to the cart with a specific quantity
     public boolean addCartItemWithQuantity(int customerId, int productId, int quantity) {
         Optional<Cart> cartOptional = cartDAO.findById(customerId);
@@ -62,10 +63,10 @@ public class CartService {
         }
         return false; // Cart or Product not found
     }
-
+*/
     /*
     * a new function if needed to add the quantities to existing product not setting it
-    *
+    */
     public boolean addCartItemWithQuantity(int customerId, int productId, int quantity) {
         Optional<Cart> cartOptional = cartDAO.findById(customerId);
         Optional<Product> productOptional = productDAO.findById( productId);
@@ -101,7 +102,7 @@ public class CartService {
 
         return false; // Cart or Product not found
     }
-    * */
+
 
     // Removes an item from the cart
     public void removeCartItem(int customerId, int productId) {

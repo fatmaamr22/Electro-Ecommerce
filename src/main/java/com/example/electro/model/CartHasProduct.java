@@ -2,15 +2,15 @@ package com.example.electro.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "cart_has_product")
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class CartHasProduct {
 
     @EmbeddedId
@@ -27,4 +27,9 @@ public class CartHasProduct {
     @Column(nullable = false)
     @Min(1)
     private int quantity;
+
+    @EqualsAndHashCode.Include
+    public Integer getProductId() {
+        return this.cartHasProductID.getProductId();
+    }
 }
