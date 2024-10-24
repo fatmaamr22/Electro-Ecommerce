@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -22,21 +23,8 @@ public class ProductWithSpecsDTO {
     private String brandName;
     private ProductSpecsDTO specs;
     private CategoryDTO category;
-    private List<String> images = new ArrayList<>();
+    private String image;
+    private Set<ImageDTO> images;
 
-    public ProductWithSpecsDTO(Product product) {
-        this.id = product.getId();
-        this.name = product.getName();
-        this.price = product.getPrice();
-        this.description = product.getDescription();
-        this.stock = product.getStock();
-        this.brandName = product.getBrandName();
-        this.specs = new ProductSpecsDTO(product.getSpecs());
-        this.category = CategoryMapper.Instance.toDTO(product.getCategory());
-        images.add(product.getImage());
-        for(Image image:product.getImages()){
-            images.add(image.getUrl());
-        }
-    }
 }
 
