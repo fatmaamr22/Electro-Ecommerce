@@ -1,16 +1,20 @@
 package com.example.electro.service;
-import com.example.electro.model.Cart;
+import com.example.electro.customDetails.CustomUserDetails;
 import com.example.electro.model.Customer;
-import com.example.electro.model.Wishlist;
 import com.example.electro.repository.CartRepository;
 import com.example.electro.repository.CustomerRepository;
 import com.example.electro.repository.WishlistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,11 +77,13 @@ public Customer updateCustomer(Integer id, Customer customerDetails) {
 }
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) {
         // Find customer by email
-        Customer customer = customerRepository.findCustomerByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
-        return new CustomUserDetails(customer); // CustomUserDetails should implement UserDetails
+        System.out.println("Inside Customer SERVICE loadUserByUsername");
+        return customerRepository.findCustomerByEmail(email)
+                .map(CustomUserDetails::new) // Return CustomUserDetails if found
+                .orElse(null); // Return null if not found
     }
+
+
 }

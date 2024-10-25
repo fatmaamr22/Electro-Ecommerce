@@ -48,16 +48,4 @@ public class CustomerController {
         return "Welcome to Admin Profile";
     }
 
-    @PostMapping("/generateToken")
-    public String authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
-        //System.out.println("Received request to generate token: " + authRequest);
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword())
-        );
-        if (authentication.isAuthenticated()) {
-            return jwtService.generateToken(authRequest.getEmail());
-        } else {
-            throw new UsernameNotFoundException("Invalid user request!");
-        }
-    }
 }

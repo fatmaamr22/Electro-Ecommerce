@@ -1,6 +1,6 @@
-package com.example.electro.service;
+package com.example.electro.customDetails;
 
-import com.example.electro.model.Customer;
+import com.example.electro.model.Admin;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,27 +8,26 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 
-public class CustomUserDetails implements UserDetails {
-    private final Customer customer;
+public class CustomAdminDetails implements UserDetails {
+    private final Admin admin;
 
-    public CustomUserDetails(Customer customer) {
-        this.customer = customer;
+    public CustomAdminDetails(Admin admin) {
+        this.admin = admin;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // All customers will have the "ROLE_USER"
-        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN"));
     }
 
     @Override
     public String getPassword() {
-        return customer.getPassword(); // Return the hashed password
+        return admin.getPassword(); // Return the hashed password
     }
 
     @Override
     public String getUsername() {
-        return customer.getEmail(); // Use email as the username
+        return admin.getEmail(); // Use email as the username
     }
 
     @Override
@@ -48,6 +47,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return customer.isActive(); // Assuming you have an active flag in Customer
+        // Assuming admins are always enabled; modify logic as needed
+        return true;
     }
 }
