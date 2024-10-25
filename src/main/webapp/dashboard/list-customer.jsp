@@ -41,7 +41,7 @@
                 <td>${customer.email}</td>
                 <td>${customer.phone}</td>
                 <td>
-                    <button class="btn btn-success" onclick="window.location.href='/ecommerce/dashboard/customer?id=${customer.id}'">View</button>
+                    <button class="btn btn-success" onclick="window.location.href='/dashboard/customers/${customer.id}'">View</button>
                 </td>
             </tr>
         </c:forEach>

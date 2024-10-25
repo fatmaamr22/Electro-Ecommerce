@@ -52,11 +52,14 @@
                             </ul>
                         </li>
                         <c:choose>
+                            <c:when test="<%= tokenExists %>">
                                 <li class="nav-item">
+                                    <a class="nav-link" href="/auth/logout">Logout</a>
                                 </li>
                             </c:when>
                             <c:otherwise>
                                 <li class="nav-item">
+                                    <a class="nav-link" href="/auth/login">Login</a>
                                 </li>
                             </c:otherwise>
                         </c:choose>

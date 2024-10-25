@@ -1,12 +1,18 @@
 package com.example.electro.service;
 import com.example.electro.customDetails.CustomUserDetails;
+import com.example.electro.dto.CustomerDTO;
+import com.example.electro.dto.OrderDTO;
+import com.example.electro.mapper.CustomerMapper;
+import com.example.electro.mapper.OrderMapper;
 import com.example.electro.model.Customer;
+import com.example.electro.model.Order;
 import com.example.electro.repository.CartRepository;
 import com.example.electro.repository.CustomerRepository;
 import com.example.electro.repository.WishlistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -18,6 +24,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -52,9 +59,16 @@ public Boolean checkEmailAvailability(String email) {
     return findByEmail(email).isEmpty();
 }
 public Optional<Customer> findByEmail(String email) {return customerRepository.findCustomerByEmail(email);}
-public Optional<Customer> findById(Integer id) {
-    return customerRepository.findById(id);
+
+    public CustomerDTO findById(Integer id) {
+    return CustomerMapper.INSTANCE.toDTO(customerRepository.findById(id).get());
 }
+
+    public List<CustomerDTO> getAllCustomers(int pageNo, int size) {
+        int page = (pageNo > 0) ? pageNo - 1 : 0;
+        Page<Customer> customers = customerRepository.findAll(PageRequest.of(page, size));
+        return CustomerMapper.INSTANCE.toDTOs(customers.getContent());
+    }
 
 //Old method did not use id customer to update
 public Customer updateCustomer(Integer id, Customer customerDetails) {

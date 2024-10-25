@@ -40,8 +40,6 @@ public class AdminService implements UserDetailsService {
         }
     }
 
-
-
     @Override
     public UserDetails loadUserByUsername(String email) {
         // Find admin by email

@@ -38,6 +38,20 @@ public class JwtService {
                 .compact();
     }
 
+//    public String createToken(Map<String, Object> claims, String email, String role, Long id) {
+//        claims.put("email", email);
+//        claims.put("role", role);
+//        claims.put("id", id); // Add user id as a claim
+//        return Jwts.builder()
+//                .setClaims(claims)
+//                .setSubject(email)
+//                .setIssuedAt(new Date())
+//                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30)) // Token valid for 30 minutes
+//                .signWith(getSignKey(), SignatureAlgorithm.HS256)
+//                .compact();
+//    }
+
+
     // Get the signing key for JWT token
     private Key getSignKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET);

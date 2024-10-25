@@ -1,5 +1,6 @@
 package com.example.electro.controller;
 
+import com.example.electro.customDetails.CustomUserDetails;
 import com.example.electro.dto.CartItemDTO;
 import com.example.electro.service.CartService;
 import com.example.electro.service.TemporaryCartService;
@@ -40,14 +41,14 @@ public class CartController {
     // Helper method to get the customerId from the authenticated user
     private int getAuthenticatedCustomerId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         // Assuming the customerId is stored in the username
-        return Integer.parseInt(userDetails.getUsername());
+        return userDetails.getId();
     }
 
     // Get all cart items for authenticated user or guest session cart
     @GetMapping
-    public String getCartItems(Model model, HttpSession session) {
+    public String getCartItemsToPage(Model model, HttpSession session) {
         List<CartItemDTO> cartProducts = new ArrayList<>();
         if (isUserAuthenticated()) {
             int customerId = getAuthenticatedCustomerId();
@@ -57,6 +58,19 @@ public class CartController {
         }
         model.addAttribute("cartItems", cartProducts);
         return "cart";
+    }
+
+    @GetMapping("/products")
+    public List<CartItemDTO> getCartItems(Model model, HttpSession session) {
+        List<CartItemDTO> cartProducts = new ArrayList<>();
+        if (isUserAuthenticated()) {
+            int customerId = getAuthenticatedCustomerId();
+            cartProducts = cartService.getCartItems(customerId);
+        } else {
+            cartProducts = temporaryCartService.getCartItems(session);
+        }
+        model.addAttribute("cartItems", cartProducts);
+        return cartProducts;
     }
 
     // Merges the guest cart into the persisted authenticated user's cart, must be invoked after the authenticated user's id already in the security context
