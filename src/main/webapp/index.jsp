@@ -289,8 +289,8 @@
                 }, 3000);
               }
             </script>
-            <c:if test="${homeProducts != null}">
-              <c:forEach items="${homeProducts}" var="current">
+            <c:if test="${latestProducts2 != null}">
+              <c:forEach items="${latestProducts2}" var="current">
                 <div class="col-lg-3 col-md-6">
                   <div class="single-product">
                     <div class="img-container">
@@ -333,8 +333,8 @@
           </div>
           <div class="row" id="product-container2">
             <!-- single product -->
-            <c:if test="${homeProducts2 != null}">
-              <c:forEach items="${homeProducts2}" var="current">
+            <c:if test="${latestProducts != null}">
+              <c:forEach items="${latestProducts}" var="current">
                 <div class="col-lg-3 col-md-6">
                   <div class="single-product">
                     <div class="img-container">

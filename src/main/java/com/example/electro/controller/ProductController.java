@@ -3,6 +3,7 @@ package com.example.electro.controller;
 
 import com.example.electro.dto.CategoryDTO;
 import com.example.electro.dto.ProductDTO;
+import com.example.electro.dto.ProductWithSpecsDTO;
 import com.example.electro.model.Product;
 import com.example.electro.service.FilterService;
 import com.example.electro.service.ProductService;
@@ -47,7 +48,6 @@ public class ProductController {
         Specification<Product> productSpec = ProductSpecification.withFilters(categories, brands, processors,operatingSystem, memoryOptions, minPrice, maxPrice);
         int pageNo = (page > 0) ? page - 1 : 0;
 
-
         Pageable pageable = PageRequest.of(pageNo, size);
 
         Page<ProductDTO> filteredProducts = productService.findAll(productSpec, pageable);
@@ -56,7 +56,7 @@ public class ProductController {
 
     }
     @GetMapping("/{id}")
-    public ProductDTO findProductById(@PathVariable Integer id){
-        return productService.findById(id);
+    public ResponseEntity<ProductWithSpecsDTO> findProductById(@PathVariable Integer id){
+        return ResponseEntity.ok(productService.findById(id));
     }
 }
