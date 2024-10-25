@@ -113,7 +113,7 @@
                                 }
                                 // Make the asynchronous request to the server
                                 $.ajax({
-                                    url: '/cart/' + itemId + '/' + currentQuantity, // Updated URL with path variables
+                                    url: '/cart/products' + itemId + '/' + currentQuantity, // Updated URL with path variables
                                     type: 'PUT',
                                     data: {
                                         id: itemId,
@@ -142,7 +142,7 @@
                             function removeItem(itemId, action) {
                                             // Make the asynchronous request to the server
                                             $.ajax({
-                                            url: '/cart/' + itemId, // Updated to use DELETE method and pass ID in URL
+                                            url: '/cart/products/' + itemId, // Updated to use DELETE method and pass ID in URL
                                             type: 'DELETE', // Using DELETE method
                                             success: function(response) {
                                                 location.reload(true); // Reload the page after removal

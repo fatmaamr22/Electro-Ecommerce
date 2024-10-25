@@ -5,9 +5,11 @@ import com.example.electro.service.CartService;
 import com.example.electro.service.TemporaryCartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpSession;
 
@@ -45,7 +47,7 @@ public class CartController {
 
     // Get all cart items for authenticated user or guest session cart
     @GetMapping
-    public String getCartItems(HttpSession session) {
+    public String getCartItems(Model model, HttpSession session) {
         List<CartItemDTO> cartProducts = new ArrayList<>();
         if (isUserAuthenticated()) {
             int customerId = getAuthenticatedCustomerId();
@@ -53,10 +55,12 @@ public class CartController {
         } else {
             cartProducts = temporaryCartService.getCartItems(session);
         }
+        model.addAttribute("cartItems", cartProducts);
         return "cart";
     }
 
     // Merges the guest cart into the persisted authenticated user's cart, must be invoked after the authenticated user's id already in the security context
+    // To-Dd: test with Moamen
     @PostMapping
     public void mergeCarts(HttpSession session){
         if (isUserAuthenticated()) {
@@ -67,7 +71,7 @@ public class CartController {
     }
 
     // Add an item to the cart (authenticated or guest)
-    @PostMapping("/{productId}")
+    @PostMapping("/products/{productId}")
     public void addCartItem(@PathVariable int productId, HttpSession session) {
         if (isUserAuthenticated()) {
             int customerId = getAuthenticatedCustomerId();
@@ -78,8 +82,9 @@ public class CartController {
     }
 
     // Add an item to the cart with a specified quantity (authenticated or guest)
-    @PostMapping("/{productId}/{quantity}")
-    public Map<String, Integer> addCartItemWithQuantity(@PathVariable int productId, @PathVariable int quantity, HttpSession session) {
+    // To-Do: test with Mandour in the single product page
+    @PostMapping("/products/{productId}/{quantity}")
+    public ResponseEntity<Map<String, Integer>> addCartItemWithQuantity(@PathVariable int productId, @PathVariable int quantity, HttpSession session) {
 
         boolean added;
         if (isUserAuthenticated()) {
@@ -91,11 +96,11 @@ public class CartController {
 
         Map<String, Integer> response = new HashMap<>();
         response.put("succeeded", added ? 1 : -1);
-        return response;
+        return ResponseEntity.ok(response);
     }
 
     // Remove an item from the cart (authenticated or guest)
-    @DeleteMapping("/{productId}")
+    @DeleteMapping("/products/{productId}")
     public ResponseEntity<Void> removeCartItem(@PathVariable("productId") int productId, HttpSession session) {
         if (isUserAuthenticated()) {
             int customerId = getAuthenticatedCustomerId();
@@ -108,7 +113,7 @@ public class CartController {
 
 
     // Set the quantity of an item in the cart (authenticated or guest)
-    @PutMapping("/{productId}/{quantity}")
+    @PutMapping("/products/{productId}/{quantity}")
     public Map<String, Integer> updateQuantity(@PathVariable int productId, @PathVariable int quantity, HttpSession session) {
         boolean updated;
         CartItemDTO updatedItem;
@@ -128,4 +133,3 @@ public class CartController {
     }
 
 }
-
