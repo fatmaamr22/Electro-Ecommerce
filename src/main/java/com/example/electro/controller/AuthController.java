@@ -78,9 +78,9 @@ public class AuthController {
 
                 // Redirect based on the user role
                 if (isAdmin) {
-                    return "redirect:/dashboard/list-orders.jsp"; // Admin dashboard
+                    return "redirect:/dashboard/customers"; // Admin dashboard
                 } else {
-                    return "redirect:/index.jsp"; // User homepage
+                    return "redirect:/"; // User homepage
                 }
             } else {
                 redirectAttributes.addFlashAttribute("loginErrorResponse", "Authentication failed. Please try again.");
