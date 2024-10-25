@@ -5,7 +5,30 @@
     <title>Header</title>
     <link rel="stylesheet" href="../assets/css/all.css">
 </head>
+
+
+
 <body>
+<%
+    // Initialize a flag to check if the JWT token exists in cookies
+    boolean tokenExists = false;
+
+    // Get cookies from the request object
+    Cookie[] cookies = request.getCookies();
+
+    if (cookies != null) {
+        for (Cookie cookie : cookies) {
+            // Check if the JWT token cookie exists
+            if ("JWT_TOKEN".equals(cookie.getName())) {
+                tokenExists = true;
+                break;
+            }
+        }
+    }
+
+    // Set the tokenExists as a request attribute
+    request.setAttribute("tokenExists", tokenExists);
+%>
 <!-- Start Header Area -->
 <header class="header_area sticky-header">
     <div class="main_menu">
@@ -32,7 +55,6 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <!-- Collect the nav links, forms, and other content for toggling -->
                 <div
                         class="collapse navbar-collapse offset"
                         id="navbarSupportedContent"
@@ -45,16 +67,16 @@
                             <a class="nav-link" href="/category.jsp">Shop</a>
                         </li>
                         <c:choose>
-                        <c:when test="${not empty sessionScope['customer-id']}">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/auth/logout">Logout</a>
-                        </li>
-                        </c:when>
-                        <c:otherwise>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/auth/login.jsp">Login</a>
-                            </li>
-                        </c:otherwise>
+                            <c:when test="<%= tokenExists %>">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="auth/logout">Logout</a>
+                                </li>
+                            </c:when>
+                            <c:otherwise>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="auth/login">Login</a>
+                                </li>
+                            </c:otherwise>
                         </c:choose>
                         <li class="nav-item">
                             <a class="nav-link" href="/contact.jsp">Contact</a>
@@ -83,6 +105,8 @@
         </nav>
     </div>
 </header>
+
+
 <!-- End Header Area -->
 </body>
 </html>
