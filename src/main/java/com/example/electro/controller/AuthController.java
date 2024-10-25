@@ -1,5 +1,6 @@
 package com.example.electro.controller;
 
+import com.example.electro.customDetails.CustomUserDetails;
 import com.example.electro.service.JwtService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -47,8 +48,17 @@ public class AuthController {
             if (authentication != null) {
                 // Print the authentication details
                 System.out.println("Authentication Details:");
-                System.out.println("Principal: " + authentication.getPrincipal());
+                System.out.println("Principal: " + authentication.getPrincipal().toString());
                 System.out.println("Authorities: " + authentication.getAuthorities());
+
+//                Integer UserID = (Integer) authentication.getPrincipal();
+//                System.out.println("userID  "+ UserID );
+
+                CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+                System.out.println("userID  "+ userDetails.getId() );
+                System.out.println("userIDpassword  "+ userDetails.getPassword() );
+                System.out.println("userIDusername  "+ userDetails.getUsername() );
+
 
                 // Determine if the user is an admin or a regular user
                 boolean isAdmin = authentication.getAuthorities().stream()
