@@ -42,7 +42,7 @@
                             <a class="nav-link" href="index.jsp">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/category.jsp">Shop</a>
+                            <a class="nav-link" href="/shop">Shop</a>
                         </li>
                         <c:choose>
                         <c:when test="${not empty sessionScope['customer-id']}">
