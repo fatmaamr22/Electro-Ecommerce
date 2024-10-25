@@ -16,10 +16,11 @@ import java.util.List;
 public class ProductSpecification {
     public static Specification<Product> withFilters(List<Integer> categories, List<String> brands,
                                                      List<String> processors,List<String> operatingSystem, List<Integer> memoryOptions,
-                                                     Integer minPrice, Integer maxPrice) {
+                                                     Integer minPrice, Integer maxPrice,Boolean deleted) {
         return (Root<Product> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
+            predicates.add(criteriaBuilder.equal(root.get("deleted"), deleted));
             // Filter by Category
             if (categories != null && !categories.isEmpty()) {
                 predicates.add(root.get("category").get("id").in(categories));
