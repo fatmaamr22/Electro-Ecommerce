@@ -1,73 +1,62 @@
+
 var currentSize = 12;
 var currentPage = 1;
 var filterDict = {
-    page: 1,
-    size: currentSize
+    page: currentPage,
+    size: currentSize,
+    'min-price': $('#lower-value').text(),
+    'max-price': $('#upper-value').text()
 };
 
+// Function to change the page number
 function changePage(pageNum){
-    filterDict.page=pageNum;
+    filterDict.page = pageNum;
     search();
 }
 
+// Function to change the page size
 function changeSize(){
-    currentSize =  $("#selectPageSize").val();
-    filterDict = {
-        page: 1,
-        size: currentSize
-    };
+    currentSize = $("#selectPageSize").val();
+    filterDict.size = currentSize;
     search();
 }
 
-    function filter() {
-        filterDict = {
-            page: 1,
-            size:currentSize,
-            'min-price': parseInt($('[data-handle="0"]').attr('aria-valuetext')) * 100,
-            'max-price': parseInt($('[data-handle="1"]').attr('aria-valuetext')) * 100
-        }
+// Function to gather selected checkboxes for a specific filter group
+function getSelectedValues(filterName) {
+    var selectedValues = [];
+    $('input[name="'+filterName+'"]:checked').each(function() {
+        selectedValues.push($(this).val());
+    });
+    return selectedValues;
+}
 
-        const category = $('input[name="category"]:checked')
-        if(category.val()!==undefined){
-            filterDict['category']=category.val();
-            category.prop('checked', false);
-        }
+// Main filter function
+function filter() {
+    // Reset page number when a new filter is applied
+    filterDict.page = 1;
 
-        const brand =$('input[name="brand"]:checked');
-        if(brand.val()!==undefined){
-            filterDict['brand']=brand.val();
-            brand.prop('checked', false);
-        }
+    // Update filter values
+    filterDict['min-price'] = parseInt($('[data-handle="0"]').attr('aria-valuetext')) * 100;
+    filterDict['max-price'] = parseInt($('[data-handle="1"]').attr('aria-valuetext')) * 100;
 
-        const processor =$('input[name="processor"]:checked');
-        if(processor.val()!==undefined){
-            filterDict['processor']=processor.val();
-            processor.prop('checked', false);
-        }
+    // Collect selected categories, brands, etc. (supports multiple selections)
+    filterDict['category'] = getSelectedValues('category');
+    filterDict['brand'] = getSelectedValues('brand');
+    filterDict['processor'] = getSelectedValues('processor');
+    filterDict['memory'] = getSelectedValues('memory');
+    filterDict['os'] = getSelectedValues('os');
 
-        const memory =$('input[name="memory"]:checked');
-        if(memory.val()!==undefined){
-            filterDict['memory']=parseInt(memory.val());
-            memory.prop('checked', false);
-        }
-
-        const os =$('input[name="os"]:checked');
-        if(os.val()!==undefined){
-            filterDict['os']=os.val();
-            os.prop('checked', false);
-        }
-
-
-        search();
-    }
+    search();
+}
 
 function search() {
     var queryParams = new URLSearchParams(filterDict).toString();
     $.get("products?" + queryParams, function (response) {
-        console.log(response);
+        console.log("queryparams",queryParams);
+        console.log("response",response);
         // Assuming response is an array of ProductDTO objects
-        var data = response.data;
-        var page = response.page;
+        var data = response.content;
+        var page = response.totalPages;
         createPagination(page, filterDict.page);
 
         // Clear the productBox before appending new products
@@ -90,7 +79,7 @@ function search() {
                                             <span class="ti-bag"></span>
                                             <p class="hover-text">add to bag</p>
                                         </a>
-                                        <a href="/ecommerce/web/single-product.jsp?id=${product.id}" class="social-info">
+                                        <a href="single-product.jsp?id=${product.id}" class="social-info">
                                             <span class="lnr lnr-move"></span>
                                             <p class="hover-text">view more</p>
                                         </a>

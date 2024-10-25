@@ -214,7 +214,7 @@
         };
 
         // Send form data to your backend
-        fetch('/ecommerce/products', {
+        fetch('/products/', {
         method: 'POST',
         headers: {
         'Content-Type': 'application/json'

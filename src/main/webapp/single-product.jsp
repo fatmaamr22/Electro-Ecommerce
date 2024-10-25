@@ -214,26 +214,27 @@
 	$(document).ready(function(){
 		const url = new URL(window.location.href);
 		const params = new URLSearchParams(url.search);
-		const id = params.get('id');
-		$.getJSON("product"+"?id="+id, populate);
+		const id = params.get('id') || ${productId};
+		$.getJSON("/products"+"/"+id, populate);
 
 		function populate(data, status, xhr){
+			console.log("data",data)
 			if(status == "success"){
 
 					$('#product-name').text(data.name);
 					$('#product-price').text((parseFloat(data.price)/100).toFixed(2) + " EGP");
 					$('#product-description').text(data.description);
 					if(data.images.length>0){
-						$('.product-image1').attr('src', data.images[0]);
+						$('.product-image1').attr('src', data.image);
 						if(data.images.length>1){
-							$('.product-image2').attr('src', data.images[1]);
+							$('.product-image2').attr('src', data.images[0].url);
 						}else {
-							$('.product-image2').attr('src', data.images[0]);
+							$('.product-image2').attr('src', data.image);
 						}
 						if(data.images.length>2){
-							$('.product-image3').attr('src', data.images[2]);
+							$('.product-image3').attr('src', data.images[1].url);
 						}else {
-							$('.product-image3').attr('src', data.images[0]);
+							$('.product-image3').attr('src', data.image);
 						}
 					}
 
