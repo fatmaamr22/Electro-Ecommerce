@@ -45,11 +45,7 @@ public class SecurityConfig {
         this.customerRepository = customerRepository;
         this.adminRepository = adminRepository;
         this.customUserDetailsService = customUserDetailsService;
-
-
     }
-
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
