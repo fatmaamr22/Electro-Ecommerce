@@ -1,15 +1,12 @@
 package com.example.electro.controller;
 
 
-import com.example.electro.dto.CategoryDTO;
 import com.example.electro.dto.ProductDTO;
 import com.example.electro.dto.ProductWithSpecsDTO;
 import com.example.electro.model.Product;
-import com.example.electro.service.FilterService;
 import com.example.electro.service.ProductService;
 import com.example.electro.specification.ProductSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +14,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -59,4 +57,16 @@ public class ProductController {
     public ResponseEntity<ProductWithSpecsDTO> findProductById(@PathVariable Integer id){
         return ResponseEntity.ok(productService.findById(id));
     }
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateProduct(@PathVariable int id,
+                                                             @RequestBody ProductWithSpecsDTO productWithSpecsDTO
+    ) {
+
+
+        ProductWithSpecsDTO updatedProduct = productService.updateProduct(id, productWithSpecsDTO);
+        productWithSpecsDTO.getImageURLs().stream().forEach(System.out::println);
+        return ResponseEntity.ok(updatedProduct);
+//        return ResponseEntity.ok().build();
+    }
+
 }
