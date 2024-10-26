@@ -5,6 +5,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
@@ -32,7 +34,7 @@ public class JwtService {
                 .setClaims(claims)
                 .setSubject(userName)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30)) // Token valid for 30 minutes
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 300))
                 .signWith(getSignKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -57,6 +59,17 @@ public class JwtService {
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
+    }
+
+    public List<SimpleGrantedAuthority> extractAuthorities(String token) {
+        Claims claims = extractAllClaims(token);
+        String roles = claims.get("roles", String.class); // Retrieve the roles claim as a string
+
+        if (roles != null) {
+            return Collections.singletonList(new SimpleGrantedAuthority(roles));
+        }
+
+        return Collections.emptyList(); // No roles found
     }
 
     public String extractRole(String token) {
@@ -91,5 +104,18 @@ public class JwtService {
     // Validate the token against user details and expiration
     public Boolean validateToken(String token) {
         return (!isTokenExpired(token));
+    }
+
+    private String getTokenFromRequest(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                // Check for the specific cookie name
+                if ("JWT_TOKEN".equals(cookie.getName())) {
+                    return cookie.getValue(); // Return the value of the token cookie
+                }
+            }
+        }
+        return null; // Return null if the token cookie is not found
     }
 }

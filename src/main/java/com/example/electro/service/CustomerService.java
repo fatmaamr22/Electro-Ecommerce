@@ -10,6 +10,7 @@ import com.example.electro.repository.CartRepository;
 import com.example.electro.repository.CustomerRepository;
 import com.example.electro.repository.WishlistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -90,6 +91,7 @@ public Customer updateCustomer(Integer id, Customer customerDetails) {
     }
 }
 
+    @Cacheable("userDetailsCache")
     @Override
     public UserDetails loadUserByUsername(String email) {
         // Find customer by email

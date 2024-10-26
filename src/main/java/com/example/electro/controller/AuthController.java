@@ -52,7 +52,7 @@ public class AuthController {
                     new UsernamePasswordAuthenticationToken(email, password)
             );
 
-           isUserAuthenticated();
+           //isUserAuthenticated();
 
             // Check if authentication was successful
             if (authentication != null) {
@@ -74,6 +74,8 @@ public class AuthController {
                      token = jwtService.createToken(new HashMap<>(), email, "ROLE_ADMIN");
                 } else {
                     // Generate token with user role
+                    CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+                    System.out.println("USerId" +userDetails.getId());
                      token = jwtService.createToken(new HashMap<>(), email, "ROLE_USER");
                 }
 
@@ -89,7 +91,7 @@ public class AuthController {
 
 
 
-                callGetEndpoint();
+//                callGetEndpoint();
 
                 // Redirect based on the user role
                 if (isAdmin) {
@@ -107,39 +109,39 @@ public class AuthController {
         }
     }
 
-    public void callGetEndpoint() {
-        String url = "http://localhost:8080/cart";
-            ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.POST, null, Void.class);
-        // Check response status if needed
-        if (response.getStatusCode().is2xxSuccessful()) {
-            System.out.println("Request was successful.");
-        } else {
-            System.out.println("Request failed.");
-        }
-    }
+//    public void callGetEndpoint() {
+//        String url = "http://localhost:8080/cart";
+//            ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.POST, null, Void.class);
+//        // Check response status if needed
+//        if (response.getStatusCode().is2xxSuccessful()) {
+//            System.out.println("Request was successful.");
+//        } else {
+//            System.out.println("Request failed.");
+//        }
+//    }
 
 
-    private boolean isUserAuthenticated() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return false;
-        }
-
-        Object principal = authentication.getPrincipal();
-        if (principal instanceof CustomAdminDetails) {
-            CustomAdminDetails adminDetails = (CustomAdminDetails) principal;
-            System.out.println("Admin ID: " + adminDetails.getId());
-        } else if (principal instanceof CustomUserDetails) {
-            CustomUserDetails customerDetails = (CustomUserDetails) principal;
-            System.out.println("Customer ID: " + customerDetails.getId());
-        } else if (principal instanceof String) {
-            System.out.println("Principal is only a username: " + principal);
-        } else {
-            System.out.println("Unknown principal type: " + principal.getClass().getName());
-        }
-
-        return !(principal instanceof String);
-    }
+//    private boolean isUserAuthenticated() {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        if (authentication == null || !authentication.isAuthenticated()) {
+//            return false;
+//        }
+//
+//        Object principal = authentication.getPrincipal();
+//        if (principal instanceof CustomAdminDetails) {
+//            CustomAdminDetails adminDetails = (CustomAdminDetails) principal;
+//            System.out.println("Admin ID: " + adminDetails.getId());
+//        } else if (principal instanceof CustomUserDetails) {
+//            CustomUserDetails customerDetails = (CustomUserDetails) principal;
+//            System.out.println("Customer ID: " + customerDetails.getId());
+//        } else if (principal instanceof String) {
+//            System.out.println("Principal is only a username: " + principal);
+//        } else {
+//            System.out.println("Unknown principal type: " + principal.getClass().getName());
+//        }
+//
+//        return !(principal instanceof String);
+//    }
 
 
 

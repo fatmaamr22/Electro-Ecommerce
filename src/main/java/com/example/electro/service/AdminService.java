@@ -2,6 +2,7 @@ package com.example.electro.service;
 import com.example.electro.customDetails.CustomAdminDetails;
 import com.example.electro.model.Admin;
 import com.example.electro.repository.AdminRepository;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,7 @@ public class AdminService implements UserDetailsService {
         }
     }
 
+    @Cacheable("adminDetailsCache")
     @Override
     public UserDetails loadUserByUsername(String email) {
         // Find admin by email

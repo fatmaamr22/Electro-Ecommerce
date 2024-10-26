@@ -27,10 +27,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         this.jwtService = jwtService;
         this.customUserDetailsService = customUserDetailsService;
     }
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getRequestURI();
+        return path.startsWith("/assets/") || path.startsWith("/css/") ||
+                path.startsWith("/js/") || path.startsWith("/img/") || path.startsWith("/webfonts/");
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+        System.out.println("JwtAuthenticationFilter called for request: " + request.getRequestURI());
         String token = getTokenFromRequest(request);
         if (token != null && jwtService.validateToken(token)) {
             String username = jwtService.extractUsername(token);
