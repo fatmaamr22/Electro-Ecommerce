@@ -80,12 +80,16 @@ public class CartController {
     // Merges the guest cart into the persisted authenticated user's cart, must be invoked after the authenticated user's id already in the security context
     // To-Do: test with Moamen
     @PostMapping
-    public void mergeCarts(HttpSession session){
+    public ResponseEntity<Void> mergeCarts(HttpSession session){
+        System.out.println("merge endoint invoked");
         if (isUserAuthenticated()) {
             int customerId = getAuthenticatedCustomerId();
             temporaryCartService.mergeCarts(session, customerId);
+            System.out.println("merge endoint ended successfully");
         } else {
         }
+
+        return ResponseEntity.ok().build();
     }
 
     // Add an item to the cart (authenticated or guest)

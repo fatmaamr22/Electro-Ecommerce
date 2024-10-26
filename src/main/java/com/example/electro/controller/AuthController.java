@@ -3,10 +3,14 @@ package com.example.electro.controller;
 import com.example.electro.customDetails.CustomAdminDetails;
 import com.example.electro.customDetails.CustomUserDetails;
 import com.example.electro.service.JwtService;
+import com.example.electro.service.TemporaryCartService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,6 +20,7 @@ import org.springframework.stereotype.Controller;
 
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashMap;
@@ -30,6 +35,12 @@ public class AuthController {
     @Autowired
     private JwtService jwtService;
 
+    @Autowired
+    private RestTemplate restTemplate;
+    
+    @Autowired
+    TemporaryCartService temporaryCartService;
+
     @GetMapping("/login")
     public String welcome() {
         return "auth/login";
@@ -38,7 +49,7 @@ public class AuthController {
     @PostMapping("/login")
     public String login(@RequestParam String email, @RequestParam String password,
                         HttpServletRequest request, HttpServletResponse response,
-                        RedirectAttributes redirectAttributes) {
+                        RedirectAttributes redirectAttributes, HttpSession session) {
         String referer = request.getHeader("Referer");
         try {
             // Authenticate the user
@@ -86,6 +97,8 @@ public class AuthController {
                 if (isAdmin) {
                     return "redirect:/dashboard/customers"; // Admin dashboard
                 } else {
+                    CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+                    temporaryCartService.mergeCarts(session , userDetails.getId()); // Merge temporary cart with user's cart'
                     return "redirect:/"; // User homepage
                 }
             } else {
@@ -98,6 +111,39 @@ public class AuthController {
         }
     }
 
+    public void callGetEndpoint() {
+        String url = "http://localhost:8080/cart";
+            ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.POST, null, Void.class);
+        // Check response status if needed
+        if (response.getStatusCode().is2xxSuccessful()) {
+            System.out.println("cart merge request was successful.");
+        } else {
+            System.out.println("cart merge request failed.");
+        }
+    }
+
+
+    private boolean isUserAuthenticated() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return false;
+        }
+
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof CustomAdminDetails) {
+            CustomAdminDetails adminDetails = (CustomAdminDetails) principal;
+            System.out.println("Admin ID: " + adminDetails.getId());
+        } else if (principal instanceof CustomUserDetails) {
+            CustomUserDetails customerDetails = (CustomUserDetails) principal;
+            System.out.println("Customer ID: " + customerDetails.getId());
+        } else if (principal instanceof String) {
+            System.out.println("Principal is only a username: " + principal);
+        } else {
+            System.out.println("Unknown principal type: " + principal.getClass().getName());
+        }
+
+        return !(principal instanceof String);
+    }
 
 
 
