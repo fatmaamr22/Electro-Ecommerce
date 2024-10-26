@@ -4,6 +4,8 @@ import com.example.electro.dto.ProductDTO;
 import com.example.electro.repository.ProductRepository;
 import com.example.electro.service.ProductService;
 import org.springframework.data.domain.PageRequest;
+import com.example.electro.dto.ProductDTO;
+import com.example.electro.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

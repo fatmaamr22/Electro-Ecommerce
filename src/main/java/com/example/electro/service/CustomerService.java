@@ -1,17 +1,45 @@
 package com.example.electro.service;
+import com.example.electro.customDetails.CustomUserDetails;
 import com.example.electro.model.Customer;
+import com.example.electro.repository.CartRepository;
 import com.example.electro.repository.CustomerRepository;
+import com.example.electro.repository.WishlistRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-public class CustomerService {
+@Service
+public class CustomerService implements UserDetailsService {
     private CustomerRepository customerRepository;
+    @Autowired
+    private CartRepository cartRepository;
+    @Autowired
+    private WishlistRepository wishlistRepository;
 
 public CustomerService(CustomerRepository customerRepository) {
     this.customerRepository = customerRepository;
 }
+
+
+@Transactional
+public Customer addCustomer(Customer customer) {
+    cartRepository.save(customer.getCart());
+    wishlistRepository.save(customer.getWishlist());
+    return customerRepository.save(customer);
+    }
+
 public Long countAll() {
     return customerRepository.count();
 }
@@ -47,4 +75,15 @@ public Customer updateCustomer(Integer id, Customer customerDetails) {
         throw new RuntimeException("Customer not found with id " + id);
     }
 }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) {
+        // Find customer by email
+        System.out.println("Inside Customer SERVICE loadUserByUsername");
+        return customerRepository.findCustomerByEmail(email)
+                .map(CustomUserDetails::new) // Return CustomUserDetails if found
+                .orElse(null); // Return null if not found
+    }
+
+
 }
