@@ -7,6 +7,8 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Controller;
 
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashMap;
@@ -29,6 +32,9 @@ public class AuthController {
 
     @Autowired
     private JwtService jwtService;
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     @GetMapping("/login")
     public String welcome() {
@@ -82,6 +88,9 @@ public class AuthController {
                 response.addCookie(jwtCookie);
 
 
+
+                callGetEndpoint();
+
                 // Redirect based on the user role
                 if (isAdmin) {
                     return "redirect:/dashboard/customers"; // Admin dashboard
@@ -97,6 +106,18 @@ public class AuthController {
             return "redirect:" + referer; // Redirect back to the login page
         }
     }
+
+    public void callGetEndpoint() {
+        String url = "http://localhost:8080/cart";
+            ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.POST, null, Void.class);
+        // Check response status if needed
+        if (response.getStatusCode().is2xxSuccessful()) {
+            System.out.println("Request was successful.");
+        } else {
+            System.out.println("Request failed.");
+        }
+    }
+
 
     private boolean isUserAuthenticated() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

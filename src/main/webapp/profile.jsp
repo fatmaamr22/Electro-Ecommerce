@@ -230,44 +230,35 @@
     <script src="../assets/js/gmaps.min.js"></script>
     <script src="../assets/js/main.js"></script>
     <script>
-      $(document).ready(function(){
-        $.getJSON("profile", populate);
+      $(document).ready(function() {
+        $.getJSON("customer/profile", populate);
 
         function populate(data, status, xhr) {
           if (status == "success") {
-            // Populate customer information
             $('#profile-name').text(data.firstName + " " + data.lastName);
-
             $('#customer-firstname-value').text(data.firstName);
             $('#firstName').val(data.firstName);
-
             $('#customer-lastname-value').text(data.lastName);
             $('#lastName').val(data.lastName);
-
             $('#customer-email-value').text(data.email);
             $('#email').val(data.email);
-
             $('#customer-address-value').text(data.address);
             $('#address').val(data.address);
-
             $('#customer-phone-value').text(data.phone);
             $('#phone').val(data.phone);
-
             $('#customer-date-value').text(data.dateOfBirth);
             let date = new Date(data.dateOfBirth);
             date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
-            let formattedDate = date.toISOString().split('T')[0]; // Get the YYYY-MM-DD format
+            let formattedDate = date.toISOString().split('T')[0];
             $('#date').val(formattedDate);
-
             $('#customer-job-value').text(data.job);
             $('#job').val(data.job);
-
             $('#customer-interests-value').text(data.interests);
             $('#interests').val(data.interests);
           }
         }
+      });
 
-      })
 
     </script>
 

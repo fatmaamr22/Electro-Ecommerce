@@ -52,16 +52,16 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // Disable CSRF for stateless APIs
                 .authorizeHttpRequests(auth -> auth
-                        //.requestMatchers("/dashboard/**").hasRole("ADMIN") // Admin-only access to /dashboard
+                        .requestMatchers("/dashboard/**").hasRole("ADMIN") // Admin-only access to /dashboard
                         .anyRequest().permitAll() // Allow all other requests without restrictions
                 )
                 .sessionManagement(sess -> sess
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // No sessions
                 )
-                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class) // Add JWT filter
-.addFilterAfter(new SecurityContextPersistenceFilter(), SecurityContextPersistenceFilter.class);
+                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class); // Add JWT filter
         return http.build();
     }
+
 
 
     @Bean
