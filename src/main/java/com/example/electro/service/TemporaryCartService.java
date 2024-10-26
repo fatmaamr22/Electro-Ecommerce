@@ -54,6 +54,20 @@ public class TemporaryCartService {
         if (productOptional.isPresent()) {
             Product product = productOptional.get();
 
+            // making sure that product addition doesn't exceed the available stock
+            if (quantity > product.getStock()){
+                return false;
+            }
+
+            CartItemDTO existentCartItem = getItem(session , productId);
+
+            if (existentCartItem != null){
+                if ((existentCartItem.getQuantity() + quantity) > product.getStock()){
+                    return false;
+                }
+            }
+
+            // Stock is ok then proceed
             TemporaryCart cart = getOrCreateCart(session);
 
             CartHasProductID cartHasProductID = new CartHasProductID();
@@ -81,6 +95,10 @@ public class TemporaryCartService {
         TemporaryCart cart = getOrCreateCart(session);
         for (CartHasProduct item : cart.getCartHasProducts()) {
             if (item.getCartHasProductID().getProductId().equals(productId)) {
+                // making sure we are setting this to a quantity below stock availability
+                if (item.getProduct().getStock() < quantity){
+                    return false;
+                }
                 item.setQuantity(quantity);
                 return true;
             }

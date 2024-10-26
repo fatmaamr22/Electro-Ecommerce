@@ -112,14 +112,11 @@
                                 }
                                 // Make the asynchronous request to the server
                                 $.ajax({
-                                    url: '/cart/products' + itemId + '/' + currentQuantity, // Updated URL with path variables
+                                    url: '/cart/products' + '/' + itemId + '/' + currentQuantity, // Updated URL with path variables
                                     type: 'PUT',
-                                    data: {
-                                        id: itemId,
-                                        quantity: currentQuantity
-                                    },
+
                                     success: function(response) {
-                                        if(response.newTotal === "-1"){
+                                        if(response.newTotal == "-1"){
                                             //$('#err-' + itemId).text("quantity out of stock!");
                                             showStockError();
                                         }

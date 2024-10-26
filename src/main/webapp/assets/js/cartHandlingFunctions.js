@@ -8,7 +8,7 @@ function addToCart(itemId, buyQuantity, action) {
                                                         quantity: buyQuantity
                                                     },
                                                     success: function(response) {
-                                                        if(response.succeeded === "1"){
+                                                        if(response.succeeded == "1"){
                                                              //$('#err-' + itemId).text("quantity out of stock!");
                                                              showStockError("Added Successfully!");
                                                          }

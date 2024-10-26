@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpSession;
@@ -19,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@RestController
+@Controller
 @RequestMapping("/cart")
 public class CartController {
 
@@ -52,16 +53,19 @@ public class CartController {
         List<CartItemDTO> cartProducts = new ArrayList<>();
         if (isUserAuthenticated()) {
             int customerId = getAuthenticatedCustomerId();
+            System.out.println("an uthenticated user entered the cart and his id is: " + customerId);
             cartProducts = cartService.getCartItems(customerId);
+
         } else {
             cartProducts = temporaryCartService.getCartItems(session);
+            System.out.println("an unauthnticated user entered the cart");
         }
         model.addAttribute("cartItems", cartProducts);
         return "cart";
     }
 
     @GetMapping("/products")
-    public List<CartItemDTO> getCartItems(Model model, HttpSession session) {
+    public ResponseEntity<List<CartItemDTO>> getCartItems(Model model, HttpSession session) {
         List<CartItemDTO> cartProducts = new ArrayList<>();
         if (isUserAuthenticated()) {
             int customerId = getAuthenticatedCustomerId();
@@ -70,7 +74,7 @@ public class CartController {
             cartProducts = temporaryCartService.getCartItems(session);
         }
         model.addAttribute("cartItems", cartProducts);
-        return cartProducts;
+        return ResponseEntity.ok(cartProducts);
     }
 
     // Merges the guest cart into the persisted authenticated user's cart, must be invoked after the authenticated user's id already in the security context
@@ -86,13 +90,14 @@ public class CartController {
 
     // Add an item to the cart (authenticated or guest)
     @PostMapping("/products/{productId}")
-    public void addCartItem(@PathVariable int productId, HttpSession session) {
+    public ResponseEntity<Void> addCartItem(@PathVariable int productId, HttpSession session) {
         if (isUserAuthenticated()) {
             int customerId = getAuthenticatedCustomerId();
             cartService.addCartItem(customerId, productId);
         } else {
             temporaryCartService.addCartItem(session, productId);
         }
+        return ResponseEntity.ok().build();
     }
 
     // Add an item to the cart with a specified quantity (authenticated or guest)
@@ -128,7 +133,7 @@ public class CartController {
 
     // Set the quantity of an item in the cart (authenticated or guest)
     @PutMapping("/products/{productId}/{quantity}")
-    public Map<String, Integer> updateQuantity(@PathVariable int productId, @PathVariable int quantity, HttpSession session) {
+    public ResponseEntity<Map<String, Integer>> updateQuantity(@PathVariable int productId, @PathVariable int quantity, HttpSession session) {
         boolean updated;
         CartItemDTO updatedItem;
         if (isUserAuthenticated()) {
@@ -143,7 +148,7 @@ public class CartController {
         int newTotal = updatedItem.getPrice() * updatedItem.getQuantity();
         Map<String, Integer> response = new HashMap<>();
         response.put("newTotal", updated ? newTotal : -1);
-        return response;
+        return ResponseEntity.ok(response);
     }
 
 }

@@ -4,10 +4,12 @@ package com.example.electro.dto;
 import com.example.electro.model.CartHasProduct;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 
 @Getter
 @Setter
+@ToString
 public class CartItemDTO {
     private Integer id;
     private String name;
