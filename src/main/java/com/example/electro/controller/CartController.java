@@ -53,7 +53,7 @@ public class CartController {
         List<CartItemDTO> cartProducts = new ArrayList<>();
         if (isUserAuthenticated()) {
             int customerId = getAuthenticatedCustomerId();
-            System.out.println("an uthenticated user entered the cart and his id is: " + customerId);
+            System.out.println("an athenticated user entered the cart and his id is: " + customerId);
             cartProducts = cartService.getCartItems(customerId);
 
         } else {
@@ -78,7 +78,7 @@ public class CartController {
     }
 
     // Merges the guest cart into the persisted authenticated user's cart, must be invoked after the authenticated user's id already in the security context
-    // To-Dd: test with Moamen
+    // To-Do: test with Moamen
     @PostMapping
     public void mergeCarts(HttpSession session){
         if (isUserAuthenticated()) {

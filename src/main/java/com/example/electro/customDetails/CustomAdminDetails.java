@@ -25,6 +25,10 @@ public class CustomAdminDetails implements UserDetails {
         return admin.getPassword(); // Return the hashed password
     }
 
+    public Integer getId() {
+        return admin.getId(); // Return the hashed password
+    }
+
     @Override
     public String getUsername() {
         return admin.getEmail(); // Use email as the username

@@ -1,5 +1,7 @@
 package com.example.electro.controller;
 
+import com.example.electro.customDetails.CustomAdminDetails;
+import com.example.electro.customDetails.CustomUserDetails;
 import com.example.electro.service.JwtService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -43,12 +45,14 @@ public class AuthController {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(email, password)
             );
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+
+
             // Check if authentication was successful
             if (authentication != null) {
                 // Print the authentication details
                 System.out.println("Authentication Details:");
-                System.out.println("Principal: " + authentication.getPrincipal());
+                System.out.println("Principal: " + authentication.getPrincipal().toString());
                 System.out.println("Authorities: " + authentication.getAuthorities());
 
                 // Determine if the user is an admin or a regular user
@@ -76,6 +80,7 @@ public class AuthController {
 
                 // Add the cookie to the response
                 response.addCookie(jwtCookie);
+
 
                 // Redirect based on the user role
                 if (isAdmin) {
