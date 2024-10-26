@@ -1,5 +1,6 @@
 package com.example.electro.controller;
 
+import com.example.electro.customDetails.CustomAdminDetails;
 import com.example.electro.customDetails.CustomUserDetails;
 import com.example.electro.service.JwtService;
 import jakarta.servlet.http.Cookie;
@@ -10,6 +11,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 
 import org.springframework.ui.Model;
@@ -44,21 +46,14 @@ public class AuthController {
                     new UsernamePasswordAuthenticationToken(email, password)
             );
 
+           isUserAuthenticated();
+
             // Check if authentication was successful
             if (authentication != null) {
                 // Print the authentication details
                 System.out.println("Authentication Details:");
                 System.out.println("Principal: " + authentication.getPrincipal().toString());
                 System.out.println("Authorities: " + authentication.getAuthorities());
-
-//                Integer UserID = (Integer) authentication.getPrincipal();
-//                System.out.println("userID  "+ UserID );
-
-                CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-                System.out.println("userID  "+ userDetails.getId() );
-                System.out.println("userIDpassword  "+ userDetails.getPassword() );
-                System.out.println("userIDusername  "+ userDetails.getUsername() );
-
 
                 // Determine if the user is an admin or a regular user
                 boolean isAdmin = authentication.getAuthorities().stream()
@@ -86,6 +81,7 @@ public class AuthController {
                 // Add the cookie to the response
                 response.addCookie(jwtCookie);
 
+
                 // Redirect based on the user role
                 if (isAdmin) {
                     return "redirect:/dashboard/customers"; // Admin dashboard
@@ -102,6 +98,27 @@ public class AuthController {
         }
     }
 
+    private boolean isUserAuthenticated() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return false;
+        }
+
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof CustomAdminDetails) {
+            CustomAdminDetails adminDetails = (CustomAdminDetails) principal;
+            System.out.println("Admin ID: " + adminDetails.getId());
+        } else if (principal instanceof CustomUserDetails) {
+            CustomUserDetails customerDetails = (CustomUserDetails) principal;
+            System.out.println("Customer ID: " + customerDetails.getId());
+        } else if (principal instanceof String) {
+            System.out.println("Principal is only a username: " + principal);
+        } else {
+            System.out.println("Unknown principal type: " + principal.getClass().getName());
+        }
+
+        return !(principal instanceof String);
+    }
 
 
 

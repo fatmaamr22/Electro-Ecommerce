@@ -1,7 +1,6 @@
 
 package com.example.electro.config;
-
-import com.example.electro.filter.JwtAuthFilter;
+import com.example.electro.filter.JwtAuthenticationFilter;
 import com.example.electro.provider.CustomUserDetailsService;
 import com.example.electro.repository.AdminRepository;
 import com.example.electro.repository.CustomerRepository;
@@ -24,20 +23,22 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final JwtAuthFilter authFilter;
+    private final JwtAuthenticationFilter authFilter;
     private final CustomerRepository customerRepository;
     private final AdminRepository adminRepository;
     private final CustomUserDetailsService customUserDetailsService;
 
 
     @Autowired
-    public SecurityConfig(JwtAuthFilter authFilter,
+    public SecurityConfig(JwtAuthenticationFilter authFilter,
                           CustomerRepository customerRepository,
                           AdminRepository adminRepository,
                           @Lazy CustomUserDetailsService customUserDetailsService) {
@@ -57,10 +58,11 @@ public class SecurityConfig {
                 .sessionManagement(sess -> sess
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // No sessions
                 )
-                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class); // Add JWT filter
-
+                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class) // Add JWT filter
+.addFilterAfter(new SecurityContextPersistenceFilter(), SecurityContextPersistenceFilter.class);
         return http.build();
     }
+
 
     @Bean
     public AuthenticationProvider customerAuthenticationProvider() {

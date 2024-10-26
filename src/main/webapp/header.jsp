@@ -92,7 +92,7 @@
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <br>
-                        <c:if test="${not empty sessionScope['customer-id']}">
+                        <c:if test="<%= tokenExists %>">
                         <li class="nav-item">
                             <button class="search">
                                 <a href="profile.jsp" class="cart"><span class="lnr fa-regular fa-user" id="search"></span></a>

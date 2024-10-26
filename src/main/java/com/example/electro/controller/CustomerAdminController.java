@@ -1,10 +1,14 @@
 package com.example.electro.controller;
 
+import com.example.electro.customDetails.CustomAdminDetails;
+import com.example.electro.customDetails.CustomUserDetails;
 import com.example.electro.dto.CustomerDTO;
 import com.example.electro.dto.OrderDTO;
 import com.example.electro.model.Customer;
 import com.example.electro.service.CustomerService;
 import com.example.electro.service.OrderService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +42,20 @@ public class CustomerAdminController {
         model.addAttribute("customers", customers);
         model.addAttribute("page", pageNumber);
         model.addAttribute("totalPages", (count+10-1)/10);
+        boolean flag= isUserAuthenticated();
+        System.out.println("user is authenticated? ="+ flag);
+
         return "dashboard/list-customer";
+    }
+
+    private boolean isUserAuthenticated() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("Authentication: " + authentication);
+        System.out.println("Authentication isAuthenticated: " + (authentication != null && authentication.isAuthenticated()));
+        System.out.println("Authentication Principal: " + authentication.getPrincipal());
+        CustomAdminDetails userDetails = (CustomAdminDetails) authentication.getPrincipal();
+        System.out.println(userDetails.getId());
+        return authentication != null && authentication.isAuthenticated() && !(authentication.getPrincipal() instanceof String);
     }
 
 
