@@ -14,13 +14,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProductSpecification {
-    public static Specification<Product> withFilters(List<Integer> categories, List<String> brands,
+    public static Specification<Product> withFilters(String searchInput ,List<Integer> categories, List<String> brands,
                                                      List<String> processors,List<String> operatingSystem, List<Integer> memoryOptions,
                                                      Integer minPrice, Integer maxPrice,Boolean deleted) {
         return (Root<Product> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
-            predicates.add(criteriaBuilder.equal(root.get("deleted"), deleted));
+            if (deleted != null){
+                predicates.add(criteriaBuilder.equal(root.get("deleted"), deleted));
+            }
             // Filter by Category
             if (categories != null && !categories.isEmpty()) {
                 predicates.add(root.get("category").get("id").in(categories));
@@ -53,6 +55,9 @@ public class ProductSpecification {
             }
             if (maxPrice != null) {
                 predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("price"), maxPrice));
+            }
+            if (searchInput != null && !searchInput.trim().isEmpty()) {
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + searchInput.toLowerCase() + "%"));
             }
 
             // Build final query with all predicates

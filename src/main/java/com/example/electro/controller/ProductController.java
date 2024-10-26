@@ -43,12 +43,12 @@ public class ProductController {
             @RequestParam(value = "size", defaultValue = "12") int size
     ) {
 
-        Specification<Product> productSpec = ProductSpecification.withFilters(categories, brands, processors,operatingSystem, memoryOptions, minPrice, maxPrice,deleted);
+        Specification<Product> productSpec = ProductSpecification.withFilters(null,categories, brands, processors,operatingSystem, memoryOptions, minPrice, maxPrice,deleted);
         int pageNo = (page > 0) ? page - 1 : 0;
         System.out.println("deleted"+deleted);
         Pageable pageable = PageRequest.of(pageNo, size);
 
-        Page<ProductDTO> filteredProducts = productService.findAll(productSpec, pageable);
+        Page<ProductDTO> filteredProducts = productService.findAllWithSpecifications(productSpec, pageable);
 
         return ResponseEntity.ok(filteredProducts);
 
@@ -58,7 +58,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.findById(id));
     }
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateProduct(@PathVariable int id,
+    public ResponseEntity<ProductWithSpecsDTO> updateProduct(@PathVariable int id,
                                                              @RequestBody ProductWithSpecsDTO productWithSpecsDTO
     ) {
 
@@ -66,7 +66,17 @@ public class ProductController {
         ProductWithSpecsDTO updatedProduct = productService.updateProduct(id, productWithSpecsDTO);
         productWithSpecsDTO.getImageURLs().stream().forEach(System.out::println);
         return ResponseEntity.ok(updatedProduct);
-//        return ResponseEntity.ok().build();
+    }
+    @PostMapping
+    public ResponseEntity<ProductWithSpecsDTO> createProduct(@RequestBody ProductWithSpecsDTO productWithSpecsDTO){
+        return ResponseEntity.ok(productService.createProduct(productWithSpecsDTO));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ProductDTO> deleteProduct(@PathVariable int id){
+
+        productService.deleteProduct(id);
+        return ResponseEntity.ok().build();
     }
 
 }

@@ -307,7 +307,7 @@
                           <span class="ti-bag"></span>
                           <p class="hover-text">add to Bag</p>
                         </a>
-                        <a href="/ecommerce/web/single-product.jsp?id=${current.getId()}" class="social-info">
+                        <a href="/product-details/${current.getId()}" class="social-info">
                           <span class="lnr lnr-move"></span>
                           <p class="hover-text">view more</p>
                         </a>

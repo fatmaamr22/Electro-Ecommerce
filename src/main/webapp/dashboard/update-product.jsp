@@ -232,8 +232,6 @@
             images: imageUrls.slice(1, 3).map(url => ({ url: url })) // First two as objects if available
         };
 
-        const formData = new FormData();
-        formData.append("product", product); // Append JSON string
         fetch(`/products/${product.id}`, {
             method: 'PUT',
             headers: {
