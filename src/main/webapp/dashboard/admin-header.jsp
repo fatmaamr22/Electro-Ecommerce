@@ -47,7 +47,7 @@
                                aria-expanded="false">View</a>
                             <ul class="dropdown-menu">
                                 <li class="nav-item"><a class="nav-link" href="customers">Customers</a></li>
-                                <li class="nav-item"><a class="nav-link" href="products">Products</a></li>
+                                <li class="nav-item"><a class="nav-link" href="/dashboard/products">Products</a></li>
                                 <li class="nav-item"><a class="nav-link" href="/dashboard/orders">Orders</a></li>
                             </ul>
                         </li>

@@ -54,7 +54,7 @@
             <br>
             <br>
             <h3>Add New Product</h3>
-            <form class="row login_form" action="/ecommerce/products/add" method="post" id="addProductForm" enctype="multipart/form-data">
+            <form class="row login_form" id="addProductForm">
                 <!-- Product Basic Info Fields -->
                 <div class="col-md-12 form-group">
                     <label for="name">Product Name</label>
@@ -77,10 +77,16 @@
                     <input type="text" class="form-control" id="brandName" name="brandName" placeholder="Brand Name" required>
                 </div>
 
-                <!-- Main Image File Upload -->
+
+                <!-- Main Image Upload -->
                 <div class="col-md-12 form-group">
-                    <label for="mainImage">Upload images</label>
-                    <input type="file" class="form-control" id="mainImage" name="mainImage" accept="image/*" required multiple>
+                    <label for="mainImage">Main Image</label>
+                    <input type="file" class="form-control" id="mainImage" name="mainImage" accept="image/*" required>
+                </div>
+                <!-- Additional Images Display and Upload -->
+                <div class="col-md-12 form-group">
+                    <label for="additionalImages">Add Additional Images</label>
+                    <input type="file" class="form-control" id="additionalImages" name="additionalImages" accept="image/*" multiple>
                 </div>
 
                 <!-- Product Specs Fields -->
@@ -146,41 +152,42 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
     import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-storage.js";
 
-    // TODO: Add SDKs for Firebase products that you want to use
-
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-    // Initialize Firebase
-
     const app = initializeApp(firebaseConfig);
-
     const storage = getStorage(app);
-
-    // Select form elements
-    const imageFiles = document.getElementById('mainImage');
-    const addProductForm = document.getElementById('addProductForm');
-
+    const mainImageFile = document.getElementById('mainImage');
+    const additionalImagesFile = document.getElementById('additionalImages');
+    const updateProductForm = document.getElementById('updateProductForm');
     let imageUrls = [];
 
     document.getElementById('uploadImagesBtn').addEventListener('click', async function () {
-        if(!validateForm()){
+        if (!validateForm()) {
             return;
         }
         showLoader();
-        const additionalImageFiles = imageFiles.files;
-        let uploadPromises = [];
-        for (let i = 0; i < Math.min(additionalImageFiles.length,3); i++) {
-            var file = additionalImageFiles[i];
-            var storageRef = ref(storage,file.name);
-            const uploadPromise = uploadBytes(storageRef, file).then((snapshot) => {
-                console.log('Uploaded a blob or file!');
-                return getDownloadURL(snapshot.ref);
-            }).then((downloadURL)=>{
-                imageUrls.push(downloadURL);
-            }).then(()=>{
-            })
-            uploadPromises.push(uploadPromise);
+
+        // Reset imageUrls to capture fresh uploads only
+        imageUrls = [];
+
+        if (mainImageFile.files[0]) {
+            const file = mainImageFile.files[0];
+            const storageRef = ref(storage, file.name);
+            await uploadBytes(storageRef, file);
+            const mainImageUrl = await getDownloadURL(storageRef);
+            imageUrls.push(mainImageUrl); // Add main image URL
+        } else {
+            imageUrls.push("${product.image}"); // Keep existing main image if no new one is uploaded
         }
-        await Promise.all(uploadPromises);
+
+        // Handle additional images upload
+        if (additionalImagesFile.files.length > 0) {
+            for (const file of additionalImagesFile.files) {
+                const storageRef = ref(storage, file.name);
+                await uploadBytes(storageRef, file);
+                const additionalImageUrl = await getDownloadURL(storageRef);
+                imageUrls.push(additionalImageUrl); // Add additional image URLs
+            }
+        }
+
 
         // After all images are uploaded, submit the form
         sendForm();
@@ -195,37 +202,44 @@
 
     if (imageUrls.length) {
     // Form data to be sent to backend
-        const formData = {
+        const product = {
             name: document.getElementById('name').value,
-            price: document.getElementById('price').value*100,
+            price: document.getElementById('price').value * 100,
+            category: { id: document.getElementById('category').value },
+            image: imageUrls.length ? imageUrls[0] : ``,
             description: document.getElementById('description').value,
             stock: document.getElementById('stock').value,
             brandName: document.getElementById('brandName').value,
-            processor: document.getElementById('processor').value,
-            memory: document.getElementById('memory').value,
-            storage: document.getElementById('storage').value,
-            graphicsCard: document.getElementById('graphicsCard').value,
-            displaySize: document.getElementById('displaySize').value,
-            batteryLife: document.getElementById('batteryLife').value,
-            os: document.getElementById('os').value,
-            weight: document.getElementById('weight').value,
-            category: document.getElementById('category').value,
-            images: imageUrls
+            imageURLs: imageUrls.slice(0, 3),
+            specs: {
+                processor: document.getElementById('processor').value,
+                memory: document.getElementById('memory').value,
+                storage: document.getElementById('storage').value,
+                graphicsCard: document.getElementById('graphicsCard').value,
+                displaySize: document.getElementById('displaySize').value,
+                batteryLife: document.getElementById('batteryLife').value,
+                os: document.getElementById('os').value,
+                weight: document.getElementById('weight').value
+            },
+            images: imageUrls.slice(1, 3).map(url => ({ url: url })) // First two as objects if available
         };
 
         // Send form data to your backend
-        fetch('/products/', {
-        method: 'POST',
-        headers: {
-        'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-        })
-        .then(response => {
-            if(response.status === 201){
+        fetch(`/products`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(product),
+        }).then(response => {
+            if (response.status === 200) {
                 hideLoader();
-                console.log("success");
-                window.location.href = window.location.origin + "/ecommerce/dashboard/products";
+                console.log("Product updated successfully");
+                location.reload();
+                alert("Product updated successfully");
+            } else {
+                hideLoader();
+                alert("Failed updating the product");
             }
         });
         } else {
