@@ -1,4 +1,3 @@
-
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <!DOCTYPE html>
@@ -113,14 +112,11 @@
                                 }
                                 // Make the asynchronous request to the server
                                 $.ajax({
-                                    url: 'updateQuantity', // Servlet URL
-                                    type: 'POST',
-                                    data: {
-                                        id: itemId,
-                                        quantity: currentQuantity
-                                    },
+                                    url: '/cart/products' + '/' + itemId + '/' + currentQuantity, // Updated URL with path variables
+                                    type: 'PUT',
+
                                     success: function(response) {
-                                        if(response.newTotal === "-1"){
+                                        if(response.newTotal == "-1"){
                                             //$('#err-' + itemId).text("quantity out of stock!");
                                             showStockError();
                                         }
@@ -142,17 +138,14 @@
                             function removeItem(itemId, action) {
                                             // Make the asynchronous request to the server
                                             $.ajax({
-                                                url: 'deleteCartItem', // Servlet URL
-                                                type: 'POST',
-                                                data: {
-                                                    id: itemId
-                                                },
-                                                success: function(response) {
-                                                    location.reload(true);
-                                                },
-                                                error: function() {
-                                                    alert("Error removing item!");
-                                                }
+                                            url: '/cart/products/' + itemId, // Updated to use DELETE method and pass ID in URL
+                                            type: 'DELETE', // Using DELETE method
+                                            success: function(response) {
+                                                location.reload(true); // Reload the page after removal
+                                            },
+                                            error: function() {
+                                                alert("Error removing item!");
+                                            }
                                             });
                                         }
 
@@ -343,7 +336,7 @@
 
 
     <script src="../assets/js/vendor/jquery-2.2.4.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"></script>
 	 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <%--	 crossorigin="anonymous"></script>--%>
 	<script src="../assets/js/vendor/bootstrap.min.js"></script>

@@ -85,9 +85,11 @@
                     <ul class="nav navbar-nav navbar-right">
                         <br>
                         <li class="nav-item">
-                            <button class="search">
-                                <a href="/cart.jsp" class="cart"><span class="ti-bag"></span></a>
-                            </button>
+                            <form action="/cart" method="get" style="display: inline;">
+                                <button type="submit" class="search">
+                                    <span class="ti-bag"></span>
+                                </button>
+                            </form>
                         </li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">

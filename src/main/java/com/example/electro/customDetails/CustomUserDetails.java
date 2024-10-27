@@ -26,6 +26,10 @@ public class CustomUserDetails implements UserDetails {
         return customer.getPassword(); // Return the hashed password
     }
 
+    public Integer getId() {
+        return customer.getId(); // Return the hashed password
+    }
+
     @Override
     public String getUsername() {
         return customer.getEmail(); // Use email as the username
