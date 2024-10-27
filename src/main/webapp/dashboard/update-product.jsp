@@ -6,10 +6,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update Product</title>
-    <link rel="stylesheet" href="../assets/css/bootstrap.css">
-    <link rel="stylesheet" href="../assets/css/main.css">
-    <link rel="stylesheet" href="../assets/css/all.css">
-    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="/../assets/css/bootstrap.css">
+    <link rel="stylesheet" href="/../assets/css/main.css">
+    <link rel="stylesheet" href="/../assets/css/all.css">
+    <link rel="stylesheet" href="/../assets/css/style.css">
 
     <style>
         /* Loader container styles */
@@ -55,7 +55,7 @@
         <div class="col-lg-6">
             <br>
             <h3>Update Product</h3>
-            <form class="row login_form" action="/ecommerce/products/update-product" method="post" id="updateProductForm" enctype="multipart/form-data">
+            <form class="row login_form"  id="updateProductForm">
                 <!-- Hidden field to hold product ID -->
                 <input type="hidden" name="id" value="${product.id}">
 
@@ -81,18 +81,25 @@
                     <input type="text" class="form-control" id="brandName" name="brandName" value="${product.brandName}" required>
                 </div>
 
-                <!-- Current Images Display and File Upload -->
+
+                <!-- Main Image Display and Upload -->
                 <div class="col-md-12 form-group">
                     <label for="mainImage">Main Image</label>
-                    <input type="file" class="form-control" id="mainImage" name="mainImage" accept="image/*" multiple>
+                    <input type="file" class="form-control" id="mainImage" name="mainImage" accept="image/*">
+                    <img src="${product.image}" alt="Product Image" width="100">
+                </div>
+
+                <!-- Additional Images Display and Upload -->
+                <div class="col-md-12 form-group">
+                    <label for="additionalImages">Add Additional Images</label>
+                    <input type="file" class="form-control" id="additionalImages" name="additionalImages" accept="image/*" multiple>
                     <c:if test="${product.images != null && !product.images.isEmpty()}">
-                        <p>Current Images:</p>
+                        <p>Additional Images:</p>
                         <c:forEach items="${product.images}" var="image">
-                            <img src="${image}" alt="Product Image" width="100">
+                            <img src="${image.url}" alt="Product Image" width="100">
                         </c:forEach>
                     </c:if>
                 </div>
-
                 <!-- Pre-populated Product Specs Fields -->
                 <div class="col-md-12 form-group">
                     <label for="processor">Processor</label>
@@ -154,63 +161,65 @@
 </section>
 
 <script type="module">
-    // // Firebase and form submission logic same as in Add Product page
-    // const firebaseConfig = {
-    //
-    //     apiKey: "AIzaSyCRoIpwi89BYLoEMo4QYjckS1LrZ5LnIDk",
-    //
-    //     authDomain: "ecommerce-a9352.firebaseapp.com",
-    //
-    //     projectId: "ecommerce-a9352",
-    //
-    //     storageBucket: "ecommerce-a9352.appspot.com",
-    //
-    //     messagingSenderId: "503437469026",
-    //
-    //     appId: "1:503437469026:web:6ea52770eb50b4e8f4383b",
-    //
-    //     measurementId: "G-0ZQXGSBQ3R"
-    //
-    // };
-    import {firebaseConfig} from "./firebase.js";
+
+    import {firebaseConfig} from "../firebase.js";
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
     import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-storage.js";
 
     const app = initializeApp(firebaseConfig);
     const storage = getStorage(app);
-    const imageFiles = document.getElementById('mainImage');
+    const mainImageFile = document.getElementById('mainImage');
+    const additionalImagesFile = document.getElementById('additionalImages');
     const updateProductForm = document.getElementById('updateProductForm');
     let imageUrls = [];
 
     document.getElementById('uploadImagesBtn').addEventListener('click', async function () {
-        if(!validateForm()){
+        if (!validateForm()) {
             return;
         }
         showLoader();
-        const additionalImageFiles = imageFiles.files;
-        let uploadPromises = [];
-        for (let i = 0; i < Math.min(additionalImageFiles.length,3); i++) {
-            var file = additionalImageFiles[i];
-            var storageRef = ref(storage,file.name);
-            const uploadPromise = uploadBytes(storageRef, file).then((snapshot) => {
-                return getDownloadURL(snapshot.ref);
-            }).then((downloadURL)=>{
-                imageUrls.push(downloadURL);
-            });
-            uploadPromises.push(uploadPromise);
+
+        // Reset imageUrls to capture fresh uploads only
+        imageUrls = [];
+
+        if (mainImageFile.files[0]) {
+            const file = mainImageFile.files[0];
+            const storageRef = ref(storage, file.name);
+            await uploadBytes(storageRef, file);
+            const mainImageUrl = await getDownloadURL(storageRef);
+            imageUrls.push(mainImageUrl); // Add main image URL
+        } else {
+            imageUrls.push("${product.image}"); // Keep existing main image if no new one is uploaded
         }
-        await Promise.all(uploadPromises);
+
+        // Handle additional images upload
+        if (additionalImagesFile.files.length > 0) {
+            for (const file of additionalImagesFile.files) {
+                const storageRef = ref(storage, file.name);
+                await uploadBytes(storageRef, file);
+                const additionalImageUrl = await getDownloadURL(storageRef);
+                imageUrls.push(additionalImageUrl); // Add additional image URLs
+            }
+        }
+
         sendForm();
     });
 
+
     function sendForm() {
-            const formData = {
-                id: document.querySelector('input[name="id"]').value,
-                name: document.getElementById('name').value,
-                price: document.getElementById('price').value*100,
-                description: document.getElementById('description').value,
-                stock: document.getElementById('stock').value,
-                brandName: document.getElementById('brandName').value,
+
+        const product = {
+            id: ${id},
+            name: document.getElementById('name').value,
+            price: document.getElementById('price').value * 100,
+            category: { id: document.getElementById('category').value },
+            image: imageUrls.length ? imageUrls[0] : `${product.image}`,
+            description: document.getElementById('description').value,
+            stock: document.getElementById('stock').value,
+            brandName: document.getElementById('brandName').value,
+            imageURLs: imageUrls.slice(0, 3),
+            specs: {
+                id:${product.specs.id},
                 processor: document.getElementById('processor').value,
                 memory: document.getElementById('memory').value,
                 storage: document.getElementById('storage').value,
@@ -218,29 +227,30 @@
                 displaySize: document.getElementById('displaySize').value,
                 batteryLife: document.getElementById('batteryLife').value,
                 os: document.getElementById('os').value,
-                weight: document.getElementById('weight').value,
-                category: document.getElementById('category').value,
-                images: imageUrls.length ? imageUrls : []
-            };
+                weight: document.getElementById('weight').value
+            },
+            images: imageUrls.slice(1, 3).map(url => ({ url: url })) // First two as objects if available
+        };
 
-            fetch(`products/${document.querySelector('input[name="id"]').value}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
-            }).then(response => {
-                if (response.status === 201) {
-                    hideLoader();
-                    console.log("Product updated successfully");
-                    location.reload();
-                    alert("Product updated successfully")
-                }
-                else {
-                    hideLoader();
-                    alert("failed updating the order");
-                }
-            });
-
+        fetch(`/products/${product.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json' // Ensure this is set to application/json
+            },
+            body: JSON.stringify(product), // Send as FormData
+        }).then(response => {
+            if (response.status === 200) {
+                hideLoader();
+                console.log("Product updated successfully");
+                location.reload();
+                alert("Product updated successfully");
+            } else {
+                hideLoader();
+                alert("Failed updating the product");
+            }
+        });
     }
+
 
     function validateForm() {
         // Get input values
@@ -295,9 +305,9 @@
     }
 
 </script>
-<script src="../assets/js/vendor/jquery-2.2.4.min.js"></script>
-<script src="../assets/js/vendor/bootstrap.min.js"></script>
-<script src="../assets/js/main.js"></script>
+<script src="/../assets/js/vendor/jquery-2.2.4.min.js"></script>
+<script src="/../assets/js/vendor/bootstrap.min.js"></script>
+<script src="/../assets/js/main.js"></script>
 
 </body>
 

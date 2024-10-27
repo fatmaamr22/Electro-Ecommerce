@@ -11,6 +11,13 @@
     <link rel="stylesheet" href="../assets/css/main.css">
     <link rel="stylesheet" href="../assets/css/all.css">
     <link rel="stylesheet" href="../assets/css/style.css">
+    <style>
+        .btn-secondary {
+            background-color: #6c757d; /* Bootstrap's secondary color */
+            cursor: not-allowed;
+            opacity: 0.65;
+        }
+    </style>
 </head>
 
 <body>
@@ -29,21 +36,27 @@
                     class="form-control"
                     id="search_input"
                     placeholder="Search Here"
-                    name="name"
+                    name="search_input"
+                    value="${param.search_input}"
+                    onblur="this.form.submit()"
             />
-            <button type="submit" class="btn"></button>
+<%--            <button type="submit" class="btn btn-primary">Search</button>--%>
             <span
                     class="lnr lnr-cross"
                     id="close_search"
                     title="Close Search"
+                    style="cursor: pointer;"
+                    onclick="document.getElementById('search_input').value='';"
             ></span>
         </form>
     </div>
 </div>
 
 <section class="container section_gap">
-    <span><h3 style="display: inline-block">Product List</h3> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <button class="btn btn-success" onclick="window.location.href='/dashboard/add-product.jsp'">Add Product</button>
+    <span>
+        <h3 style="display: inline-block">Product List</h3>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button class="btn btn-success" onclick="window.location.href='/dashboard/create-product'">Add Product</button>
     </span>
     <!-- Product Table -->
     <table class="table table-striped">
@@ -62,12 +75,21 @@
             <tr>
                 <td>${product.id}</td>
                 <td>${product.name}</td>
-                <td><fmt:formatNumber value="${product.price/100}" type="number" minFractionDigits="2" maxFractionDigits="2"/></td>
+                <td>
+                    <fmt:formatNumber value="${product.price / 100}" type="number" minFractionDigits="2" maxFractionDigits="2"/>
+                </td>
                 <td>${product.stock}</td>
                 <td>${product.brandName}</td>
                 <td>
-                    <button class="btn btn-danger" onclick="event.stopPropagation(); confirmDelete(${product.id})">Delete</button>
-                    <button class="btn btn-primary" onclick="window.location.href='/ecommerce/dashboard/update-product?id=${product.id}'">Update</button>
+                    <c:choose>
+                        <c:when test="${product.deleted}">
+                            <button class="btn btn-secondary disabled" >Deleted</button>
+                        </c:when>
+                        <c:otherwise>
+                            <button id="delete-btn-${product.id}" class="btn btn-danger" onclick="confirmDelete(${product.id})">Delete</button>
+                        </c:otherwise>
+                    </c:choose>
+                    <button class="btn btn-primary" onclick="window.location.href='/dashboard/products/${product.id}'">Update</button>
                 </td>
             </tr>
         </c:forEach>
@@ -78,7 +100,7 @@
     <nav aria-label="Page navigation">
         <ul class="pagination">
             <li class="page-item ${page == 1 ? 'disabled' : ''}">
-                <button class="page-link" onclick="redirect(${page - 1})"  aria-label="Previous">
+                <button class="page-link" onclick="redirect(${page - 1})" aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                 </button>
             </li>
@@ -107,24 +129,32 @@
 
     // Function to delete the product
     function deleteProduct(productId) {
-        fetch(`/ecommerce/dashboard/delete-product?id=`+productId, {
-            method: 'GET',
+        fetch(`/products/`+productId, {
+            method: 'DELETE',
         }).then(response => {
             if (response.ok) {
-                // If delete is successful, reload the page
                 alert('Product deleted successfully');
                 window.location.reload();
             } else {
                 alert('Failed to delete the product');
             }
+        }).catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while trying to delete the product');
         });
     }
-    function redirect(pageNum){
+
+    function redirect(pageNum) {
         const urlParams = new URLSearchParams(window.location.search);
-        let name =  urlParams.get("name");
-        if(name == null)window.location.href = window.location.origin + window.location.pathname + "?page="+pageNum;
-        else window.location.href = window.location.origin + window.location.pathname + "?page="+pageNum+"&name="+name;
+        let searchInput =  urlParams.get("search_input");
+        if (searchInput == null){
+            window.location.href=`${window.location.origin}${window.location.pathname}?page=`+pageNum
+        }
+        else {
+            window.location.href=`${window.location.origin}${window.location.pathname}?page=`+pageNum+"&search_input="+searchInput;
+        }
     }
+
 </script>
 
 <script src="../assets/js/vendor/jquery-2.2.4.min.js"></script>
