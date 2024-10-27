@@ -16,7 +16,7 @@ import java.util.List;
 import static org.springframework.data.web.config.EnableSpringDataWebSupport.PageSerializationMode.VIA_DTO;
 
 @SpringBootApplication
-@EnableSpringDataWebSupport
+@EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO)
 public class ElectroApplication extends SpringBootServletInitializer {
 
 	@Override

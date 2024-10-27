@@ -37,7 +37,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        System.out.println("JwtAuthenticationFilter called for request: " + request.getRequestURI());
         String token = getTokenFromRequest(request);
         if (token != null && jwtService.validateToken(token)) {
             String username = jwtService.extractUsername(token);

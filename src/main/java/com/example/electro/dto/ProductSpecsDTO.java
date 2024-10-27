@@ -2,6 +2,7 @@ package com.example.electro.dto;
 
 import com.example.electro.model.Image;
 import com.example.electro.model.ProductSpecs;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,6 +13,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class ProductSpecsDTO {
     private Integer id;
     private String processor;

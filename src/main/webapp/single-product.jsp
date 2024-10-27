@@ -224,19 +224,18 @@
 					$('#product-name').text(data.name);
 					$('#product-price').text((parseFloat(data.price)/100).toFixed(2) + " EGP");
 					$('#product-description').text(data.description);
-					if(data.images.length>0){
-						$('.product-image1').attr('src', data.image);
-						if(data.images.length>1){
+				$('.product-image1').attr('src', data.image);
+				if(data.images.length>0){
 							$('.product-image2').attr('src', data.images[0].url);
 						}else {
 							$('.product-image2').attr('src', data.image);
 						}
-						if(data.images.length>2){
+						if(data.images.length>1){
 							$('.product-image3').attr('src', data.images[1].url);
 						}else {
 							$('.product-image3').attr('src', data.image);
 						}
-					}
+
 
 
 				// Populate specs

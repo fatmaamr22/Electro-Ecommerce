@@ -251,32 +251,29 @@
             <!-- single product -->
             <script>
               function addToCart(itemId, buyQuantity, action) {
-                // Make the asynchronous request to the server
-                $.ajax({
-                  url: 'addCartItem', // Servlet URL
-                  type: 'POST',
-                  data: {
-                    id: itemId,
-                    quantity: buyQuantity
-                  },
-                  success: function (response) {
-                    if (response.succeeded === "1") {
-                      //$('#err-' + itemId).text("quantity out of stock!");
-                      showStockError("Added Successfully!");
-                    }
-                    else {
-                      showStockError("quantity out of stock!");
-                    }
-                  }, error: function(response) {
-                    if(response.status == 401){
-                      window.location.href = window.location.origin + "/ecommerce/web/auth/login.jsp"
-                    }
-                    else{
-                      alert("Error adding item!");
-                    }
+                    // Make the asynchronous request to the server
+                  $.ajax({
+                      url: '/cart/products/' + itemId + '/' + buyQuantity, // Updated URL with path variables
+                      type: 'POST',
 
-                         },
-                });
+                      success: function(response) {
+                          if(response.succeeded == 1){
+                               //$('#err-' + itemId).text("quantity out of stock!");
+                               showStockError("Added Successfully!");
+                           }
+                          else{
+                              showStockError("quantity out of stock!");
+                          }
+                      },
+                      error: function(response) {
+                          if(response.status == 401){
+                              window.location.href = window.location.origin + "/ecommerce/web/auth/login.jsp"
+                          }
+                          else{
+                              alert("Error adding item!");
+                          }
+                      },
+                  });
               }
               function showStockError(msg) {
                 var popup = document.getElementById("stock-error");
@@ -307,7 +304,7 @@
                           <span class="ti-bag"></span>
                           <p class="hover-text">add to Bag</p>
                         </a>
-                        <a href="/ecommerce/web/single-product.jsp?id=${current.getId()}" class="social-info">
+                        <a href="/product-details/${current.getId()}" class="social-info">
                           <span class="lnr lnr-move"></span>
                           <p class="hover-text">view more</p>
                         </a>

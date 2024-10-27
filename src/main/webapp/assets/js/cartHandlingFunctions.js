@@ -1,14 +1,14 @@
 function addToCart(itemId, buyQuantity, action) {
                                                 // Make the asynchronous request to the server
                                                 $.ajax({
-                                                    url: 'addCartItem', // Servlet URL
+                                                    url: '/cart/products/' + itemId + '/' + buyQuantity, // Updated URL with path variables
                                                     type: 'POST',
                                                     data: {
                                                         id: itemId,
                                                         quantity: buyQuantity
                                                     },
                                                     success: function(response) {
-                                                        if(response.succeeded === "1"){
+                                                        if(response.succeeded == "1"){
                                                              //$('#err-' + itemId).text("quantity out of stock!");
                                                              showStockError("Added Successfully!");
                                                          }
