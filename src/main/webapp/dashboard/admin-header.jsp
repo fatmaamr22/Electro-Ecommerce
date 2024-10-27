@@ -46,7 +46,7 @@
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                                aria-expanded="false">View</a>
                             <ul class="dropdown-menu">
-                                <li class="nav-item"><a class="nav-link" href="customers">Customers</a></li>
+                                <li class="nav-item"><a class="nav-link" href="/dashboard/customers">Customers</a></li>
                                 <li class="nav-item"><a class="nav-link" href="/dashboard/products">Products</a></li>
                                 <li class="nav-item"><a class="nav-link" href="/dashboard/orders">Orders</a></li>
                             </ul>

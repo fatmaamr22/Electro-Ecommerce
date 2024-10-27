@@ -81,25 +81,15 @@
 							</li>
 						</ul>
 						<ul class="nav navbar-nav navbar-right">
+							<br>
 							<li class="nav-item">
-								<button class="search">
-									<a href="#" class="cart"><span class="ti-bag"></span></a>
-								</button>
+								<form action="/cart" method="get" style="display: inline;">
+									<button type="submit" class="search">
+										<span class="ti-bag"></span>
+									</button>
+								</form>
 							</li>
 						</ul>
-						<ul class="nav navbar-nav navbar-right">
-							<%--                        <li class="nav-item">--%>
-							<%--                            <a href="cart" class="cart"><span class="ti-bag"></span></a>--%>
-							<%--                        </li>--%>
-							<c:if test="${not empty sessionScope['customer-id']}">
-							<li class="nav-item">
-								<button class="search">
-									<a href="#" class="cart"><span class="lnr fa-regular fa-user" id="search"></span></a>
-								</button>
-							</li>
-							</c:if>
-						</ul>
-
 					</div>
 				</div>
 			</nav>

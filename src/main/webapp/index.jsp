@@ -168,7 +168,7 @@
                     alt=""
                   />
                   <a
-                    href="/category.jsp"
+                    href="/shop"
                   >
                     <div class="deal-details">
                       <h6 class="deal-title">GAMING</h6>
@@ -185,7 +185,7 @@
                     alt=""
                   />
                   <a
-                    href="category.jsp"
+                    href="/shop"
                   >
                     <div class="deal-details">
                       <h6 class="deal-title">WORKSTATION</h6>
@@ -202,7 +202,7 @@
                     alt=""
                   />
                   <a
-                    href="category.jsp"
+                    href="/shop"
                   >
                     <div class="deal-details">
                       <h6 class="deal-title">BUSINESS</h6>
@@ -219,7 +219,7 @@
                     alt=""
                   />
                   <a
-                    href="category.jsp"
+                    href="/shop"
                   >
                     <div class="deal-details">
                       <h6 class="deal-title">SMARTBOOK</h6>
@@ -348,7 +348,7 @@
                           <span class="ti-bag"></span>
                           <p class="hover-text">add to Bag</p>
                         </a>
-                        <a href="/ecommerce/web/single-product.jsp?id=${current.getId()}" class="social-info">
+                        <a href="/product-details/${current.getId()}" class="social-info">
                           <span class="lnr lnr-move"></span>
                           <p class="hover-text">view more</p>
                         </a>
@@ -371,35 +371,35 @@
     <section class="brand-area section_gap">
       <div class="container">
         <div class="row">
-          <a class="col single-img" href="category.jsp">
+          <a class="col single-img" href="/shop">
             <img
               class="img-fluid d-block mx-auto"
               src="../assets/img/brand/acer.jpg"
               alt=""
             />
           </a>
-          <a class="col single-img" href="category.jsp">
+          <a class="col single-img" href="/shop">
             <img
               class="img-fluid d-block mx-auto"
               src="../assets/img/brand/apple.jpg"
               alt=""
             />
           </a>
-          <a class="col single-img" href="category.jsp">
+          <a class="col single-img" href="/shop">
             <img
               class="img-fluid d-block mx-auto"
               src="../assets/img/brand/asus.jpg"
               alt=""
             />
           </a>
-          <a class="col single-img" href="category.jsp">
+          <a class="col single-img" href="/shop">
             <img
               class="img-fluid d-block mx-auto"
               src="../assets/img/brand/dell.jpg"
               alt=""
             />
           </a>
-          <a class="col single-img" href="category.jsp">
+          <a class="col single-img" href="/shop">
             <img
               class="img-fluid d-block mx-auto"
               src="../assets/img/brand/lenovo.jpg"

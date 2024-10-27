@@ -56,7 +56,7 @@ function search() {
         console.log("response",response);
         // Assuming response is an array of ProductDTO objects
         var data = response.content;
-        var page = response.totalPages;
+        var page = response.page.totalPages;
         createPagination(page, filterDict.page);
 
         // Clear the productBox before appending new products

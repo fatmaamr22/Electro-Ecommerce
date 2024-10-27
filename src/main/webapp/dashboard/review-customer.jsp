@@ -8,7 +8,7 @@
             content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
     <!-- Favicon-->
-    <link rel="shortcut icon" href="../assets/img/electro-logo.png" />
+    <link rel="shortcut icon" href="/../assets/img/electro-logo.png" />
     <!-- Author Meta -->
     <meta name="author" content="CodePixar" />
     <!-- Meta Description -->
@@ -22,19 +22,19 @@
     <!--
 		CSS
 		============================================= -->
-    <link rel="stylesheet" href="../assets/css/linearicons.css" />
-    <link rel="stylesheet" href="../assets/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="../assets/css/themify-icons.css" />
-    <link rel="stylesheet" href="../assets/css/bootstrap.css" />
-    <link rel="stylesheet" href="../assets/css/owl.carousel.css" />
-    <link rel="stylesheet" href="../assets/css/nice-select.css" />
-    <link rel="stylesheet" href="../assets/css/nouislider.min.css" />
-    <link rel="stylesheet" href="../assets/css/ion.rangeSlider.css" />
-    <link rel="stylesheet" href="../assets/css/ion.rangeSlider.skinFlat.css" />
-    <link rel="stylesheet" href="../assets/css/magnific-popup.css" />
-    <link rel="stylesheet" href="../assets/css/main.css" />
-    <link rel="stylesheet" href="../assets/css/all.css">
-    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="/../assets/css/linearicons.css" />
+    <link rel="stylesheet" href="/../assets/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/../assets/css/themify-icons.css" />
+    <link rel="stylesheet" href="/../assets/css/bootstrap.css" />
+    <link rel="stylesheet" href="/../assets/css/owl.carousel.css" />
+    <link rel="stylesheet" href="/../assets/css/nice-select.css" />
+    <link rel="stylesheet" href="/../assets/css/nouislider.min.css" />
+    <link rel="stylesheet" href="/../assets/css/ion.rangeSlider.css" />
+    <link rel="stylesheet" href="/../assets/css/ion.rangeSlider.skinFlat.css" />
+    <link rel="stylesheet" href="/../assets/css/magnific-popup.css" />
+    <link rel="stylesheet" href="/../assets/css/main.css" />
+    <link rel="stylesheet" href="/../assets/css/all.css">
+    <link rel="stylesheet" href="/../assets/css/style.css">
     <style>
         /* Profile Page Styling */
         .profile-container {
