@@ -37,7 +37,7 @@ public class AuthController {
 
     @Autowired
     private RestTemplate restTemplate;
-    
+
     @Autowired
     TemporaryCartService temporaryCartService;
 
@@ -49,7 +49,7 @@ public class AuthController {
     @PostMapping("/login")
     public String login(@RequestParam String email, @RequestParam String password,
                         HttpServletRequest request, HttpServletResponse response,
-                        RedirectAttributes redirectAttributes, HttpSession session) {
+                        RedirectAttributes redirectAttributes,HttpSession session) {
         String referer = request.getHeader("Referer");
         try {
             // Authenticate the user
@@ -57,7 +57,7 @@ public class AuthController {
                     new UsernamePasswordAuthenticationToken(email, password)
             );
 
-
+           //isUserAuthenticated();
 
             // Check if authentication was successful
             if (authentication != null) {
