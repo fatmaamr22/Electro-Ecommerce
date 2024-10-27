@@ -1,17 +1,21 @@
 package com.example.electro.dto;
 
+import com.example.electro.mapper.CategoryMapper;
 import com.example.electro.model.Image;
 import com.example.electro.model.Product;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class ProductWithSpecsDTO {
     private Integer id;
     private String name;
@@ -21,21 +25,9 @@ public class ProductWithSpecsDTO {
     private String brandName;
     private ProductSpecsDTO specs;
     private CategoryDTO category;
-    private List<String> images = new ArrayList<>();
+    private String image;
+    private List<ImageDTO> images;
+    private List<String> imageURLs;
 
-    public ProductWithSpecsDTO(Product product) {
-        this.id = product.getId();
-        this.name = product.getName();
-        this.price = product.getPrice();
-        this.description = product.getDescription();
-        this.stock = product.getStock();
-        this.brandName = product.getBrandName();
-        this.specs = new ProductSpecsDTO(product.getSpecs());
-        this.category = new CategoryDTO(product.getCategory());
-        images.add(product.getImage());
-        for(Image image:product.getImages()){
-            images.add(image.getUrl());
-        }
-    }
 }
 

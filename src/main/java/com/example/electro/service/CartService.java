@@ -38,6 +38,7 @@ public class CartService {
         addCartItemWithQuantity(customerId, productId, 1);
     }
 
+    /*
     // Adds an item to the cart with a specific quantity
     public boolean addCartItemWithQuantity(int customerId, int productId, int quantity) {
         Optional<Cart> cartOptional = cartDAO.findById(customerId);
@@ -62,6 +63,54 @@ public class CartService {
         }
         return false; // Cart or Product not found
     }
+*/
+    /*
+    * a new function if needed to add the quantities to existing product not setting it
+    */
+    public boolean addCartItemWithQuantity(int customerId, int productId, int quantity) {
+        Optional<Cart> cartOptional = cartDAO.findById(customerId);
+        Optional<Product> productOptional = productDAO.findById( productId);
+
+        if (cartOptional.isPresent() && productOptional.isPresent()) {
+            Cart cart = cartOptional.get();
+            Product product = productOptional.get();
+            // If quantity tops the stock it returns false anyway
+            if (quantity > product.getStock()){
+                return false;
+            }
+
+            // Find if the product is already in the cart
+            CartHasProductID cartHasProductID = new CartHasProductID();
+            cartHasProductID.setCartId(cart.getId());
+            cartHasProductID.setProductId(product.getId());
+
+            Optional<CartHasProduct> existingCartProductOptional = cartHasProductDAO.findById(cartHasProductID);
+
+            CartHasProduct cartHasProduct;
+            if (existingCartProductOptional.isPresent()) {
+                // If the product is already in the cart, add to the existing quantity
+                cartHasProduct = existingCartProductOptional.get();
+                // making sure we are not exceeding stock
+                if (cartHasProduct.getQuantity() + quantity > product.getStock()){
+                    return false;
+                }
+                cartHasProduct.setQuantity(cartHasProduct.getQuantity() + quantity);
+            } else {
+                // If the product is not in the cart, create a new entry
+                cartHasProduct = new CartHasProduct();
+                cartHasProduct.setCartHasProductID(cartHasProductID);
+                cartHasProduct.setCart(cart);
+                cartHasProduct.setProduct(product);
+                cartHasProduct.setQuantity(quantity);
+            }
+
+            cartHasProductDAO.save(cartHasProduct);
+            return true;
+        }
+
+        return false; // Cart or Product not found
+    }
+
 
     // Removes an item from the cart
     public void removeCartItem(int customerId, int productId) {
@@ -80,19 +129,31 @@ public class CartService {
     // Updates the quantity of an item in the cart
     public boolean setCartItemQuantity(int customerId, int productId, int quantity) {
         Optional<Cart> cartOptional = cartDAO.findById(customerId);
+        Optional<Product> productOptional = productDAO.findById( productId);
 
-        if (cartOptional.isPresent()) {
-            Cart cart = cartOptional.get();
-            CartHasProductID cartHasProductID = new CartHasProductID();
-            cartHasProductID.setCartId(cart.getId());
-            cartHasProductID.setProductId(productId);
+        if (productOptional.isPresent()) {
+            Product product = productOptional.get();
+            if (quantity > product.getStock()) {
+                return false;
+            }
 
-            Optional<CartHasProduct> cartHasProductOptional = cartHasProductDAO.findById(cartHasProductID);
-            if (cartHasProductOptional.isPresent()) {
-                CartHasProduct cartHasProduct = cartHasProductOptional.get();
-                cartHasProduct.setQuantity(quantity);
-                cartHasProductDAO.save(cartHasProduct);
-                return true;
+            if (cartOptional.isPresent()) {
+                Cart cart = cartOptional.get();
+                CartHasProductID cartHasProductID = new CartHasProductID();
+                cartHasProductID.setCartId(cart.getId());
+                cartHasProductID.setProductId(productId);
+
+                Optional<CartHasProduct> cartHasProductOptional = cartHasProductDAO.findById(cartHasProductID);
+                if (cartHasProductOptional.isPresent()) {
+                    CartHasProduct cartHasProduct = cartHasProductOptional.get();
+                    // Checking stock for availability
+                    if (cartHasProduct.getQuantity() + quantity > product.getStock()) {
+                        return false;
+                    }
+                    cartHasProduct.setQuantity(quantity);
+                    cartHasProductDAO.save(cartHasProduct);
+                    return true;
+                }
             }
         }
         return false; // Cart or Product not found
