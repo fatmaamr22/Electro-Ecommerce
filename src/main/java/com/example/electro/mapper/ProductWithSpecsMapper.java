@@ -1,6 +1,5 @@
 package com.example.electro.mapper;
 
-
 import com.example.electro.dto.ProductWithSpecsDTO;
 import com.example.electro.model.Product;
 import org.mapstruct.Mapper;

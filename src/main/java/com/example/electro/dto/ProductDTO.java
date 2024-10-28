@@ -1,6 +1,5 @@
 package com.example.electro.dto;
 
-import com.example.electro.model.Product;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

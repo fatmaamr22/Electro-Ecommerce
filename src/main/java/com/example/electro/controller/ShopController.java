@@ -1,10 +1,7 @@
 package com.example.electro.controller;
 
-import com.example.electro.dto.ProductDTO;
-import com.example.electro.model.Product;
 import com.example.electro.service.FilterService;
 import com.example.electro.service.ProductService;
-import com.example.electro.specification.ProductSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
 
@@ -13,7 +10,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.List;
 
 @Controller
 @RequestMapping("shop")

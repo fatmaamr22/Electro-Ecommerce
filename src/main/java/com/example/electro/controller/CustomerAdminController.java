@@ -1,16 +1,12 @@
 package com.example.electro.controller;
 
 import com.example.electro.dto.CustomerDTO;
-import com.example.electro.dto.OrderDTO;
-import com.example.electro.model.Customer;
 import com.example.electro.service.CustomerService;
-import com.example.electro.service.OrderService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("dashboard/customers")
@@ -40,12 +36,4 @@ public class CustomerAdminController {
         model.addAttribute("totalPages", (count+10-1)/10);
         return "dashboard/list-customer";
     }
-
-
-//    // Review All Orders Using A Specific Coupon in Admin Panel
-//    @GetMapping("/coupons/{name}")
-//    public List<OrderDTO> getOrdersByCoupon(@PathVariable("name") String couponName) {
-//        return orderService.getOrdersbyCouponName(couponName);
-//    }
-
 }

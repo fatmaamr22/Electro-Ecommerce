@@ -8,7 +8,6 @@ import com.example.electro.model.Product;
 import com.example.electro.model.ProductSpecs;
 import com.example.electro.repository.ImagesRepository;
 import com.example.electro.repository.ProductRepository;
-
 import com.example.electro.repository.ProductSpecsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -63,9 +62,22 @@ public class ProductService {
 
         List<Image> existingImages = existingProduct.getImages();
 
-        for (int i = 0 ; i < existingImages.size() && i < productWithSpecsDTO.getImages().size(); i++){
-            existingImages.get(i).setUrl(productWithSpecsDTO.getImages().get(i).getUrl());
+        // Update or add images based on the size of existing and new images
+        for (int i = 0; i < productWithSpecsDTO.getImages().size(); i++) {
+            if (i < existingImages.size()) {
+                // Override existing images
+                existingImages.get(i).setUrl(productWithSpecsDTO.getImages().get(i).getUrl());
+            } else {
+                // Add new images
+                Image newImage = new Image();
+                newImage.setUrl(productWithSpecsDTO.getImages().get(i).getUrl());
+                newImage.setProduct(existingProduct);
+                imagesRepository.save(newImage);
+                existingImages.add(newImage);
+            }
+
         }
+
         existingProduct.setName(productWithSpecsDTO.getName());
         existingProduct.setDescription(productWithSpecsDTO.getDescription());
         existingProduct.setPrice(productWithSpecsDTO.getPrice());

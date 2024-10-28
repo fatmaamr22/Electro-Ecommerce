@@ -12,9 +12,7 @@ public class ProductDetailsController {
 
     @GetMapping("/{id}")
     public String getProductDetails(@PathVariable("id") Long productId, Model model) {
-
         model.addAttribute("productId", productId);
-
         return "single-product";
     }
 }

@@ -8,7 +8,6 @@ import com.example.electro.repository.CouponRepository;
 import com.example.electro.repository.CustomerRepository;
 import com.example.electro.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;

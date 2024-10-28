@@ -37,11 +37,4 @@ public class OrderAdminController {
         return "dashboard/list-orders";
     }
 
-
-//    // Review All Orders Using A Specific Coupon in Admin Panel
-//    @GetMapping("/coupons/{name}")
-//    public List<OrderDTO> getOrdersByCoupon(@PathVariable("name") String couponName) {
-//        return orderService.getOrdersbyCouponName(couponName);
-//    }
-
 }

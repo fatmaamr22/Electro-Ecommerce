@@ -1,16 +1,11 @@
 package com.example.electro.controller;
 
-import com.example.electro.customDetails.CustomAdminDetails;
 import com.example.electro.customDetails.CustomUserDetails;
-import com.example.electro.dto.AuthRequest;
-import com.example.electro.dto.CustomerDTO;
 import com.example.electro.model.Customer;
-import com.example.electro.model.TemporaryCart;
 import com.example.electro.service.CustomerService;
 import com.example.electro.service.JwtService;
 import com.example.electro.service.TemporaryCartService;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,20 +14,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Controller
@@ -166,7 +155,6 @@ public class CustomerController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
-
 
     @GetMapping("/admin/adminProfile")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")

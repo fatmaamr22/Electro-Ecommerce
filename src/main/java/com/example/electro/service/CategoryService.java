@@ -10,7 +10,6 @@ import java.util.List;
 public class CategoryService {
     public CategoryRepository categoryRepository;
 
-
     public CategoryService(CategoryRepository categoryRepository){
         this.categoryRepository = categoryRepository;
     }

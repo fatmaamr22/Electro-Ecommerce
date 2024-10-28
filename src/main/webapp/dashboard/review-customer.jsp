@@ -117,18 +117,44 @@
                     <h2 class="profile-name" id="profile-name">${customer.firstName} ${customer.lastName}</h2>
                 </div>
                 <!-- Profile Details (Visible before editing) -->
-                <div id="profileDetails" class="profile-details">
-                    <br>
-                    <h4>About:</h4>
-                    <br>
-                    <p><strong id="customer-firstname">First Name:</strong> <span id="customer-firstname-value">${customer.firstName}</span></p>
-                    <p><strong id="customer-lastname">Last Name:</strong> <span id="customer-lastname-value">${customer.lastName}</span></p>
-                    <p><strong id="customer-email">Email:</strong> <span id="customer-email-value">${customer.email}</span></p>
-                    <p><strong id="customer-address">Address:</strong> <span id="customer-address-value">${customer.address}</span></p>
-                    <p><strong id="customer-phone">Phone:</strong> <span id="customer-phone-value">${customer.phone}</span></p>
-                    <p><strong id="customer-date">Date Of Birth:</strong> <span id="customer-date-value">${customer.dateOfBirth}</span></p>
-                    <p><strong id="customer-job">Job:</strong> <span id="customer-job-value">${customer.job}</span></p>
-                    <p><strong id="customer-interests">Interests:</strong> <span id="customer-interests-value">${customer.interests}</span></p>
+                <br>
+                <br>
+                <br>
+
+                <div id="profileDetails" class="profile-details card">
+                    <h4 class="profile-title">Customer</h4>
+                    <div class="profile-item">
+                        <i class="fas fa-user"></i>
+                        <p><strong>First Name:</strong> <span id="customer-firstname-value">${customer.firstName}</span></p>
+                    </div>
+                    <div class="profile-item">
+                        <i class="fas fa-user-tag"></i>
+                        <p><strong>Last Name:</strong> <span id="customer-lastname-value">${customer.lastName}</span></p>
+                    </div>
+                    <div class="profile-item">
+                        <i class="fas fa-envelope"></i>
+                        <p><strong>Email:</strong> <span id="customer-email-value">${customer.email}</span></p>
+                    </div>
+                    <div class="profile-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <p><strong>Address:</strong> <span id="customer-address-value">${customer.address}</span></p>
+                    </div>
+                    <div class="profile-item">
+                        <i class="fas fa-phone"></i>
+                        <p><strong>Phone:</strong> <span id="customer-phone-value">${customer.phone}</span></p>
+                    </div>
+                    <div class="profile-item">
+                        <i class="fas fa-birthday-cake"></i>
+                        <p><strong>Date Of Birth:</strong> <span id="customer-date-value">${customer.dateOfBirth}</span></p>
+                    </div>
+                    <div class="profile-item">
+                        <i class="fas fa-briefcase"></i>
+                        <p><strong>Job:</strong> <span id="customer-job-value">${customer.job}</span></p>
+                    </div>
+                    <div class="profile-item">
+                        <i class="fas fa-heart"></i>
+                        <p><strong>Interests:</strong> <span id="customer-interests-value">${customer.interests}</span></p>
+                    </div>
                 </div>
             </div>
         </div>

@@ -2,7 +2,6 @@ package com.example.electro.mapper;
 
 import com.example.electro.dto.OrderItemDTO;
 import com.example.electro.model.OrderItem;
-import com.example.electro.model.OrderItemID;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import org.springframework.context.i18n.LocaleContextHolder;
