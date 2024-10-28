@@ -143,10 +143,10 @@
 								<div id="price-range" data-min-price="${minPrice}" data-max-price="${maxPrice}"></div>
 								<div class="value-wrapper d-flex">
 									<div class="price">Price:</div>
-									<span>&pound;</span>
+									<span>EGP</span>
 									<div id="lower-value"></div>
 									<div class="to">to</div>
-									<span>&pound;</span>
+									<span>EGP</span>
 									<div id="upper-value"></div>
 								</div>
 							</div>

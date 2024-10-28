@@ -43,7 +43,7 @@
 					<!-- Brand and toggle get grouped for better mobile display -->
 
 					<div class="logo-container">
-						<a class="navbar-brand logo_h" href="../index.jsp"
+						<a class="navbar-brand logo_h" href="/"
 						><img src="../../assets/img/electro-logo.png" alt="" class="logo-image"
 						/></a>
 					</div>
@@ -68,10 +68,10 @@
 					>
 						<ul class="nav navbar-nav menu_nav ml-auto">
 							<li class="nav-item active">
-								<a class="nav-link" href="../index.jsp">Home</a>
+								<a class="nav-link" href="/">Home</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" href="../category.jsp">Shop</a>
+								<a class="nav-link" href="/shop">Shop</a>
 							</li>
 							<li class="nav-item">
 								<a class="nav-link" href="#">Login</a>
@@ -81,25 +81,15 @@
 							</li>
 						</ul>
 						<ul class="nav navbar-nav navbar-right">
+							<br>
 							<li class="nav-item">
-								<button class="search">
-									<a href="#" class="cart"><span class="ti-bag"></span></a>
-								</button>
+								<form action="/cart" method="get" style="display: inline;">
+									<button type="submit" class="search">
+										<span class="ti-bag"></span>
+									</button>
+								</form>
 							</li>
 						</ul>
-						<ul class="nav navbar-nav navbar-right">
-							<%--                        <li class="nav-item">--%>
-							<%--                            <a href="cart" class="cart"><span class="ti-bag"></span></a>--%>
-							<%--                        </li>--%>
-							<c:if test="${not empty sessionScope['customer-id']}">
-							<li class="nav-item">
-								<button class="search">
-									<a href="#" class="cart"><span class="lnr fa-regular fa-user" id="search"></span></a>
-								</button>
-							</li>
-							</c:if>
-						</ul>
-
 					</div>
 				</div>
 			</nav>

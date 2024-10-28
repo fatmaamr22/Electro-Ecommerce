@@ -282,7 +282,7 @@
                                 </c:choose>
                                 <td>
                                     <div class="checkout_btn_inner d-flex align-items-center">
-                                        <a class="gray_btn" href="index.jsp">Continue Shopping</a>
+                                        <a class="gray_btn" href="/">Continue Shopping</a>
 <!--                                        <a class="primary-btn" href="#">Proceed to checkout</a>-->
                                         <form action="orderDetails" method="get" id="coForm">
                                             <input type="hidden" name="coupon" id="hiddenValue">

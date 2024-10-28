@@ -234,12 +234,12 @@
         }).then(response => {
             if (response.status === 200) {
                 hideLoader();
-                console.log("Product updated successfully");
+                console.log("Product added successfully");
                 location.reload();
-                alert("Product updated successfully");
+                alert("Product added successfully");
             } else {
                 hideLoader();
-                alert("Failed updating the product");
+                alert("Failed adding the product");
             }
         });
         } else {
