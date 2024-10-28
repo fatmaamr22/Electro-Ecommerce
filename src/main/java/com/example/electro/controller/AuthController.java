@@ -2,6 +2,7 @@ package com.example.electro.controller;
 
 import com.example.electro.customDetails.CustomAdminDetails;
 import com.example.electro.customDetails.CustomUserDetails;
+import com.example.electro.provider.CustomUserDetailsService;
 import com.example.electro.service.JwtService;
 import com.example.electro.service.TemporaryCartService;
 import jakarta.servlet.http.Cookie;
@@ -16,11 +17,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashMap;
@@ -41,75 +45,58 @@ public class AuthController {
     @Autowired
     TemporaryCartService temporaryCartService;
 
+    @Autowired
+    CustomUserDetailsService customUserDetailsService;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     @GetMapping("/login")
     public String welcome() {
         return "auth/login";
     }
 
     @PostMapping("/login")
-    public String login(@RequestParam String email, @RequestParam String password,
-                        HttpServletRequest request, HttpServletResponse response,
-                        RedirectAttributes redirectAttributes,HttpSession session) {
-        String referer = request.getHeader("Referer");
+    public ModelAndView login(@RequestParam String email, @RequestParam String password,
+                              HttpServletRequest request, HttpServletResponse response,
+                              RedirectAttributes redirectAttributes, HttpSession session) {
+        ModelAndView modelAndView = new ModelAndView();
         try {
-            // Authenticate the user
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(email, password)
-            );
+            UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
+            if (userDetails != null && passwordEncoder.matches(password, userDetails.getPassword())) {
+                Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
 
-           //isUserAuthenticated();
-
-            // Check if authentication was successful
-            if (authentication != null) {
-                // Print the authentication details
-                System.out.println("Authentication Details:");
-                System.out.println("Principal: " + authentication.getPrincipal().toString());
-                System.out.println("Authorities: " + authentication.getAuthorities());
-
-                // Determine if the user is an admin or a regular user
                 boolean isAdmin = authentication.getAuthorities().stream()
                         .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
 
-                System.out.println("isAdmin: " + isAdmin);
+                String token = jwtService.createToken(new HashMap<>(), email, isAdmin ? "ROLE_ADMIN" : "ROLE_USER");
 
-                String token="";
-                // Generate the JWT token
-                if (isAdmin) {
-                    // Generate token with admin role
-                     token = jwtService.createToken(new HashMap<>(), email, "ROLE_ADMIN");
-                } else {
-                    // Generate token with user role
-                     token = jwtService.createToken(new HashMap<>(), email, "ROLE_USER");
-                }
-
-                // Create a cookie to store the token
                 Cookie jwtCookie = new Cookie("JWT_TOKEN", token);
-                jwtCookie.setHttpOnly(true); // Prevent JavaScript from accessing the token
-                jwtCookie.setSecure(true); // Ensure the cookie is only sent over HTTPS
-                jwtCookie.setPath("/"); // Set the cookie path
-                jwtCookie.setMaxAge(60 * 60 * 10); // Set expiry time for the token (10 hours)
+                jwtCookie.setHttpOnly(true);
+                jwtCookie.setSecure(true);
+                jwtCookie.setPath("/");
+                jwtCookie.setMaxAge(60 * 60 * 10);
 
-                // Add the cookie to the response
                 response.addCookie(jwtCookie);
 
-
-                // Redirect based on the user role
                 if (isAdmin) {
-                    return "redirect:/dashboard/customers"; // Admin dashboard
+                    modelAndView.setViewName("redirect:/dashboard/customers");
                 } else {
-                    CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-                    temporaryCartService.mergeCarts(session , userDetails.getId()); // Merge temporary cart with user's cart'
-                    return "redirect:/"; // User homepage
+                    temporaryCartService.mergeCarts(session, ((CustomUserDetails) userDetails).getId());
+                    modelAndView.setViewName("redirect:/");
                 }
             } else {
-                redirectAttributes.addFlashAttribute("loginErrorResponse", "Authentication failed. Please try again.");
-                return "redirect:" + referer; // Redirect back to the login page
+                redirectAttributes.addFlashAttribute("loginErrorResponse", "Invalid email or password");
+                modelAndView.setViewName("redirect:/auth/login");
             }
-        } catch (AuthenticationException e) {
-            redirectAttributes.addFlashAttribute("loginErrorResponse", "Invalid email or password");
-            return "redirect:" + referer; // Redirect back to the login page
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("loginErrorResponse", "Authentication failed. Please try again.");
+            modelAndView.setViewName("redirect:/auth/login");
         }
+        return modelAndView;
     }
+
 
     public void callGetEndpoint() {
         String url = "http://localhost:8080/cart";

@@ -20,6 +20,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
@@ -39,6 +40,12 @@ public class CustomerService implements UserDetailsService {
 public CustomerService(CustomerRepository customerRepository) {
     this.customerRepository = customerRepository;
 }
+
+    @Transactional
+    public Customer save(Customer customer) {
+        return customerRepository.save(customer);
+    }
+
 
 
 @Transactional
@@ -90,6 +97,30 @@ public Customer updateCustomer(Integer id, Customer customerDetails) {
         throw new RuntimeException("Customer not found with id " + id);
     }
 }
+    public boolean updateUserPassword(String encodedPassword) {
+        try {
+            // Update the password for the currently logged-in user (this is a simple example)
+            Customer customer = getCurrentAuthenticatedUser(); // You would implement this method
+            customer.setPassword(encodedPassword);
+            customerRepository.save(customer);
+            return true;
+        } catch (Exception e) {
+            // Log the error or handle it accordingly
+            return false;
+        }
+    }
+
+    public Customer getCurrentAuthenticatedUser() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof CustomUserDetails) {
+            // Cast to CustomUserDetails to access your custom user information
+            CustomUserDetails userDetails = (CustomUserDetails) principal;
+            return userDetails.getCustomer(); // Assuming your CustomUserDetails has a method getUser()
+        } else {
+            throw new IllegalStateException("User is not authenticated");
+        }
+    }
 
     @Cacheable("userDetailsCache")
     @Override
