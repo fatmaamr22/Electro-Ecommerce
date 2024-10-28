@@ -130,7 +130,7 @@
             </div>
 
             <!-- Profile Form (User Information) -->
-            <form class="profile-form mt-4" id="profileForm" style="display: none" action="/ecommerce/web/profile" method="post">
+            <form class="profile-form mt-4" id="profileForm" action="/customer/update" method="post" style="display: none;">
               <label for="firstName">First Name</label>
               <input type="text" id="firstName" name="firstName" required/>
 
@@ -138,7 +138,7 @@
               <input type="text" id="lastName" name="lastName" required/>
 
               <label for="email">Email</label>
-              <input type="email" id="email" name="email" onblur="checkValidEmail()" required />
+              <input type="email" id="email" name="email" onblur="checkValidEmail()" required readonly/>
               <div id="emailError" class="text-danger"></div>
 
               <label for="address">Address</label>
@@ -147,8 +147,8 @@
               <label for="phone">Phone</label>
               <input type="tel" id="phone" pattern="[0-9]{11}" name="phone" required />
 
-              <label for="date">Date Of Birth</label>
-              <input type="date" id="date" name="date" max="2013-01-01" min="1900-01-01" required />
+              <label for="dateOfBirth">Date Of Birth</label>
+              <input type="date" id="dateOfBirth" name="dateOfBirth" max="2013-01-01" min="1900-01-01" required />
 
               <label for="job">Job</label>
               <input type="text" id="job" name="job" />
@@ -160,8 +160,10 @@
               <button type="button" class="cancel-btn" onclick="toggleEditForm()">Cancel</button>
             </form>
 
+
+
             <!-- Password Form -->
-            <form class="profile-form mt-4" id="passwordForm" style="display: none" action="/ecommerce/web/update-password" method="post">
+            <form class="profile-form mt-4" id="passwordForm" style="display: none" action="/customer/update-password" method="post">
               <label for="password">New Password</label>
               <input
                       type="password"
@@ -181,7 +183,7 @@
               <div id="confirmPasswordError" class="text-danger"></div>
 
               <input type="submit" class="save-btn" value="Change Password" />
-              <button type="button" class="cancel-btn" onclick="toggleEditForm()">Cancel</button>
+              <button type="button" class="cancel-btn" onclick="togglePasswordForm()">Cancel</button>
             </form>
 
             <!-- User Orders Form (Initially Hidden) -->
@@ -312,11 +314,16 @@
             $('#address').val(data.address);
             $('#customer-phone-value').text(data.phone);
             $('#phone').val(data.phone);
-            $('#customer-date-value').text(data.dateOfBirth);
-            let date = new Date(data.dateOfBirth);
-            date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
-            let formattedDate = date.toISOString().split('T')[0];
-            $('#date').val(formattedDate);
+
+            // Update Date of Birth handling
+            if (data.dateOfBirth) {
+              $('#customer-date-value').text(data.dateOfBirth);
+              let date = new Date(data.dateOfBirth);
+              date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+              let formattedDate = date.toISOString().split('T')[0];
+              $('#dateOfBirth').val(formattedDate);
+            }
+
             $('#customer-job-value').text(data.job);
             $('#job').val(data.job);
             $('#customer-interests-value').text(data.interests);
@@ -392,21 +399,26 @@
       function toggleEditForm() {
         const profileForm = document.getElementById("profileForm");
         const passwordForm = document.getElementById("passwordForm");
-        const details = document.getElementById("profileDetails");
 
+        // Close the password form if it's open
+        if (passwordForm.style.display === "block") {
+          passwordForm.style.display = "none";
+        }
+
+        // Toggle the visibility of the profile form
         profileForm.style.display = profileForm.style.display === "none" ? "block" : "none";
-        passwordForm.style.display = "none"; // Hide password form when editing profile
-        details.style.display = details.style.display === "none" ? "block" : "none";
       }
-
       function togglePasswordForm() {
-        const profileForm = document.getElementById("profileForm");
         const passwordForm = document.getElementById("passwordForm");
-        const details = document.getElementById("profileDetails");
+        const profileForm = document.getElementById("profileForm"); // Reference to the profile form
 
+        // Toggle visibility of the password form
         passwordForm.style.display = passwordForm.style.display === "none" ? "block" : "none";
-        profileForm.style.display = "none"; // Hide profile form when editing password
-        details.style.display = "none"; // Hide details when editing password
+
+        // Hide the profile form if the password form is shown
+        if (passwordForm.style.display === "block") {
+          profileForm.style.display = "none";
+        }
       }
     </script>
   </body>

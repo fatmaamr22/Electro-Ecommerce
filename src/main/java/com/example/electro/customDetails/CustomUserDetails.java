@@ -54,4 +54,8 @@ public class CustomUserDetails implements UserDetails {
     public boolean isEnabled() {
         return customer.isActive(); // Assuming you have an active flag in Customer
     }
+
+    public Customer getCustomer() {
+        return customer;
+    }
 }

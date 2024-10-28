@@ -128,10 +128,10 @@
 						<h3>Log in to enter</h3>
 						<form class="row login_form" action="/auth/login" method="post" id="contactForm">
 							<div class="col-md-12 form-group">
-								<input type="email" class="form-control" id="email" name="email" placeholder="Email" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email'" required>
+								<input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
 							</div>
 							<div class="col-md-12 form-group">
-								<input type="password" class="form-control" id="password" name="password" placeholder="Password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'" required>
+								<input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
 							</div>
 							<div class="col-md-12 form-group">
 								<div class="creat_account">
@@ -142,13 +142,13 @@
 							<div class="col-md-12 form-group">
 								<button type="submit" value="submit" class="primary-btn">Log In</button>
 							</div>
-
 							<div class="col-md-12 form-group">
 								<c:if test="${not empty loginErrorResponse}">
 									<div id="loginError" class="text-danger">${loginErrorResponse}</div>
 								</c:if>
 							</div>
 						</form>
+
 					</div>
 				</div>
 			</div>
