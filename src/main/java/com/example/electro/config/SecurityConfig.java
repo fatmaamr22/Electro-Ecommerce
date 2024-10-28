@@ -7,9 +7,11 @@ import com.example.electro.repository.CustomerRepository;
 import com.example.electro.service.AdminService;
 import com.example.electro.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -51,6 +53,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // Disable CSRF for stateless APIs
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/dashboard/**").hasRole("ADMIN") // Admin-only access to /dashboard
+                        .requestMatchers("/").hasRole("USER")
                         .anyRequest().permitAll() // Allow all other requests without restrictions
                 )
                 .sessionManagement(sess -> sess
@@ -79,7 +82,8 @@ public class SecurityConfig {
     }
 
 
-    @Bean
+
+    @Bean// Explicitly declaring singleton scope
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(); // Password encoding
     }

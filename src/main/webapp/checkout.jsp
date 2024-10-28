@@ -90,7 +90,7 @@
                             </c:otherwise>
                             </c:choose>
                             <!-- Payment options -->
-                            <form action="order" method="post">
+                            <form action="/order" method="post">
                                 <input name="coupon" value="${coupon}" type="hidden" id="coVal" >
                                 <button type="submit" class="primary-btn">PROCEED TO PAYMENT</button>
                             </form>

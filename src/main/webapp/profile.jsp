@@ -57,7 +57,7 @@
         font-size: 24px;
         font-weight: bold;
       }
-      .edit-profile-btn,.edit-password-btn {
+      .edit-profile-btn,.edit-password-btn, .show-orders-btn {
         width: 170px;
         margin-top: 20px;
         padding: 10px 20px;
@@ -125,11 +125,12 @@
               <h2 class="profile-name" id="profile-name"></h2>
               <button class="edit-profile-btn" onclick="toggleEditForm()">Edit Profile</button>
               <button class="edit-password-btn" onclick="togglePasswordForm()">Change Password</button>
+              <button class="show-orders-btn" onclick="toggleOrdersForm()">My Orders</button>
 
             </div>
 
             <!-- Profile Form (User Information) -->
-            <form class="profile-form mt-4" id="profileForm" style="display: none" action="/ecommerce/web/profile" method="post">
+            <form class="profile-form mt-4" id="profileForm" action="/customer/update" method="post" style="display: none;">
               <label for="firstName">First Name</label>
               <input type="text" id="firstName" name="firstName" required/>
 
@@ -137,7 +138,7 @@
               <input type="text" id="lastName" name="lastName" required/>
 
               <label for="email">Email</label>
-              <input type="email" id="email" name="email" onblur="checkValidEmail()" required />
+              <input type="email" id="email" name="email" onblur="checkValidEmail()" required readonly/>
               <div id="emailError" class="text-danger"></div>
 
               <label for="address">Address</label>
@@ -146,8 +147,8 @@
               <label for="phone">Phone</label>
               <input type="tel" id="phone" pattern="[0-9]{11}" name="phone" required />
 
-              <label for="date">Date Of Birth</label>
-              <input type="date" id="date" name="date" max="2013-01-01" min="1900-01-01" required />
+              <label for="dateOfBirth">Date Of Birth</label>
+              <input type="date" id="dateOfBirth" name="dateOfBirth" max="2013-01-01" min="1900-01-01" required />
 
               <label for="job">Job</label>
               <input type="text" id="job" name="job" />
@@ -159,8 +160,10 @@
               <button type="button" class="cancel-btn" onclick="toggleEditForm()">Cancel</button>
             </form>
 
+
+
             <!-- Password Form -->
-            <form class="profile-form mt-4" id="passwordForm" style="display: none" action="/ecommerce/web/update-password" method="post">
+            <form class="profile-form mt-4" id="passwordForm" style="display: none" action="/customer/update-password" method="post">
               <label for="password">New Password</label>
               <input
                       type="password"
@@ -180,8 +183,72 @@
               <div id="confirmPasswordError" class="text-danger"></div>
 
               <input type="submit" class="save-btn" value="Change Password" />
-              <button type="button" class="cancel-btn" onclick="toggleEditForm()">Cancel</button>
+              <button type="button" class="cancel-btn" onclick="togglePasswordForm()">Cancel</button>
             </form>
+
+            <!-- User Orders Form (Initially Hidden) -->
+            <form class="profile-form mt-4" id="ordersForm" style="display: none">
+              <h4>My Orders</h4>
+              <table class="table table-striped">
+                <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Total Price</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody id="ordersTableBody">
+                <!-- Orders will be populated here -->
+                </tbody>
+              </table>
+              <button type="button" class="cancel-btn" onclick="toggleOrdersForm()">Close</button>
+            </form>
+
+            <!-- Order Details Modal -->
+            <div id="orderDetailsModal" class="modal" tabindex="-1" role="dialog" style="display: none;">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Order Details</h5>
+                    <button type="button" class="close" onclick="closeOrderModal()">
+                      <span>&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body" id="orderDetailsBody" style="max-height: 400px; overflow-y: auto; text-align: center">
+                    <!-- Order details will be dynamically populated here -->
+                    <form>
+                      <div class="form-group">
+                        <label for="orderId">Order ID</label>
+                        <input type="text" id="orderId" class="form-control" readonly />
+                      </div>
+                      <div class="form-group">
+                        <label for="orderTotal">Total Price</label>
+                        <input type="text" id="orderTotal" class="form-control" readonly />
+                      </div>
+                      <div class="form-group">
+                        <label for="orderDate">Date</label>
+                        <input type="text" id="orderDate" class="form-control" readonly />
+                      </div>
+                      <div class="form-group">
+                        <label for="orderStatus">Status</label>
+                        <input type="text" id="orderStatus" class="form-control" readonly />
+                      </div>
+
+                      <div class="form-group">
+                        <label for="orderItems">Items</label>
+                        <textarea id="orderItems" class="form-control" rows="4" readonly></textarea>
+                      </div>
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeOrderModal()">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
 
             <!-- Profile Details (Visible before editing) -->
             <div id="profileDetails" class="profile-details">
@@ -203,6 +270,7 @@
     <!-- start footer Area -->
     <c:import url="footer.jsp" />
 
+    <script src="assets/js/order-profile.js"></script>
     <script>
       function toggleEditForm() {
         const form = document.getElementById("profileForm");
@@ -246,11 +314,16 @@
             $('#address').val(data.address);
             $('#customer-phone-value').text(data.phone);
             $('#phone').val(data.phone);
-            $('#customer-date-value').text(data.dateOfBirth);
-            let date = new Date(data.dateOfBirth);
-            date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
-            let formattedDate = date.toISOString().split('T')[0];
-            $('#date').val(formattedDate);
+
+            // Update Date of Birth handling
+            if (data.dateOfBirth) {
+              $('#customer-date-value').text(data.dateOfBirth);
+              let date = new Date(data.dateOfBirth);
+              date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+              let formattedDate = date.toISOString().split('T')[0];
+              $('#dateOfBirth').val(formattedDate);
+            }
+
             $('#customer-job-value').text(data.job);
             $('#job').val(data.job);
             $('#customer-interests-value').text(data.interests);
@@ -258,7 +331,6 @@
           }
         }
       });
-
 
     </script>
 
@@ -327,21 +399,26 @@
       function toggleEditForm() {
         const profileForm = document.getElementById("profileForm");
         const passwordForm = document.getElementById("passwordForm");
-        const details = document.getElementById("profileDetails");
 
+        // Close the password form if it's open
+        if (passwordForm.style.display === "block") {
+          passwordForm.style.display = "none";
+        }
+
+        // Toggle the visibility of the profile form
         profileForm.style.display = profileForm.style.display === "none" ? "block" : "none";
-        passwordForm.style.display = "none"; // Hide password form when editing profile
-        details.style.display = details.style.display === "none" ? "block" : "none";
       }
-
       function togglePasswordForm() {
-        const profileForm = document.getElementById("profileForm");
         const passwordForm = document.getElementById("passwordForm");
-        const details = document.getElementById("profileDetails");
+        const profileForm = document.getElementById("profileForm"); // Reference to the profile form
 
+        // Toggle visibility of the password form
         passwordForm.style.display = passwordForm.style.display === "none" ? "block" : "none";
-        profileForm.style.display = "none"; // Hide profile form when editing password
-        details.style.display = "none"; // Hide details when editing password
+
+        // Hide the profile form if the password form is shown
+        if (passwordForm.style.display === "block") {
+          profileForm.style.display = "none";
+        }
       }
     </script>
   </body>
