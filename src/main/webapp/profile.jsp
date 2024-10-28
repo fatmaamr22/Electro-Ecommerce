@@ -57,12 +57,12 @@
         font-size: 24px;
         font-weight: bold;
       }
-      .edit-profile-btn,.edit-password-btn {
+      .edit-profile-btn,.edit-password-btn, .show-orders-btn {
         width: 170px;
         margin-top: 20px;
         padding: 10px 20px;
         border: none;
-        background-color: #3C5B6F;
+        background-color: #1F6E8C;
         color: white;
         border-radius: 5px;
         cursor: pointer;
@@ -125,6 +125,7 @@
               <h2 class="profile-name" id="profile-name"></h2>
               <button class="edit-profile-btn" onclick="toggleEditForm()">Edit Profile</button>
               <button class="edit-password-btn" onclick="togglePasswordForm()">Change Password</button>
+              <button class="show-orders-btn" onclick="toggleOrdersForm()">My Orders</button>
 
             </div>
 
@@ -185,18 +186,118 @@
               <button type="button" class="cancel-btn" onclick="togglePasswordForm()">Cancel</button>
             </form>
 
-            <!-- Profile Details (Visible before editing) -->
-            <div id="profileDetails" class="profile-details">
-              <h4>About</h4>
-              <p><strong id="customer-firstname">First Name:</strong> <span id="customer-firstname-value"></span></p>
-              <p><strong id="customer-lastname">Last Name:</strong> <span id="customer-lastname-value"></span></p>
-              <p><strong id="customer-email">Email:</strong> <span id="customer-email-value"></span></p>
-              <p><strong id="customer-address">Address:</strong> <span id="customer-address-value"></span></p>
-              <p><strong id="customer-phone">Phone:</strong> <span id="customer-phone-value"></span></p>
-              <p><strong id="customer-date">Date Of Birth:</strong> <span id="customer-date-value"></span></p>
-              <p><strong id="customer-job">Job:</strong> <span id="customer-job-value"></span></p>
-              <p><strong id="customer-interests">Interests:</strong> <span id="customer-interests-value"></span></p>
+            <!-- User Orders Form (Initially Hidden) -->
+            <form class="profile-form mt-4" id="ordersForm" style="display: none">
+              <h4>My Orders</h4>
+              <table class="table table-striped">
+                <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Total Price</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody id="ordersTableBody">
+                <!-- Orders will be populated here -->
+                </tbody>
+              </table>
+              <button type="button" class="cancel-btn" onclick="toggleOrdersForm()">Close</button>
+            </form>
+
+            <!-- Order Details Modal -->
+            <div id="orderDetailsModal" class="modal" tabindex="-1" role="dialog" style="display: none;">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Order Details</h5>
+                    <button type="button" class="close" onclick="closeOrderModal()">
+                      <span>&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body" id="orderDetailsBody" style="max-height: 400px; overflow-y: auto; text-align: center">
+                    <!-- Order details will be dynamically populated here -->
+                    <form>
+                      <div class="form-group">
+                        <label for="orderId">Order ID</label>
+                        <input type="text" id="orderId" class="form-control" readonly />
+                      </div>
+                      <div class="form-group">
+                        <label for="orderTotal">Total Price</label>
+                        <input type="text" id="orderTotal" class="form-control" readonly />
+                      </div>
+                      <div class="form-group">
+                        <label for="orderDate">Date</label>
+                        <input type="text" id="orderDate" class="form-control" readonly />
+                      </div>
+                      <div class="form-group">
+                        <label for="orderStatus">Status</label>
+                        <input type="text" id="orderStatus" class="form-control" readonly />
+                      </div>
+
+                      <div class="form-group">
+                        <label for="orderItems">Items</label>
+                        <textarea id="orderItems" class="form-control" rows="4" readonly></textarea>
+                      </div>
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeOrderModal()">Close</button>
+                  </div>
+                </div>
+              </div>
             </div>
+
+            <!-- Profile Details (Visible before editing) -->
+            <br>
+            <br>
+            <br>
+            <div id="profileDetails" class="profile-details card">
+              <h4 class="profile-title">About You</h4>
+
+              <div class="profile-item">
+                <i class="fas fa-user"></i>
+                <p><strong>First Name:</strong> <span id="customer-firstname-value"></span></p>
+              </div>
+
+              <div class="profile-item">
+                <i class="fas fa-user-tag"></i>
+                <p><strong>Last Name:</strong> <span id="customer-lastname-value"></span></p>
+              </div>
+
+              <div class="profile-item">
+                <i class="fas fa-envelope"></i>
+                <p><strong>Email:</strong> <span id="customer-email-value"></span></p>
+              </div>
+
+              <div class="profile-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <p><strong>Address:</strong> <span id="customer-address-value"></span></p>
+              </div>
+
+              <div class="profile-item">
+                <i class="fas fa-phone"></i>
+                <p><strong>Phone:</strong> <span id="customer-phone-value"></span></p>
+              </div>
+
+              <div class="profile-item">
+                <i class="fas fa-birthday-cake"></i>
+                <p><strong>Date Of Birth:</strong> <span id="customer-date-value"></span></p>
+              </div>
+
+              <div class="profile-item">
+                <i class="fas fa-briefcase"></i>
+                <p><strong>Job:</strong> <span id="customer-job-value"></span></p>
+              </div>
+
+              <div class="profile-item">
+                <i class="fas fa-heart"></i>
+                <p><strong>Interests:</strong> <span id="customer-interests-value"></span></p>
+              </div>
+            </div>
+
+
           </div>
         </div>
       </div>
@@ -205,6 +306,7 @@
     <!-- start footer Area -->
     <c:import url="footer.jsp" />
 
+    <script src="assets/js/order-profile.js"></script>
     <script>
       function toggleEditForm() {
         const form = document.getElementById("profileForm");
@@ -333,25 +435,39 @@
       function toggleEditForm() {
         const profileForm = document.getElementById("profileForm");
         const passwordForm = document.getElementById("passwordForm");
+        const profileDetails = document.getElementById("profileDetails");
+        const ordersForm = document.getElementById("ordersForm");
 
         // Close the password form if it's open
-        if (passwordForm.style.display === "block") {
-          passwordForm.style.display = "none";
-        }
+        passwordForm.style.display = "none";
+        profileDetails.style.display = "none";
+        ordersForm.style.display = "none";
 
-        // Toggle the visibility of the profile form
-        profileForm.style.display = profileForm.style.display === "none" ? "block" : "none";
+        if(profileForm.style.display === "none"){
+          profileForm.style.display = "block";
+          profileDetails.style.display = "none";
+        } else {
+          profileForm.style.display = "none";
+          profileDetails.style.display = "block";
+        }
       }
+
       function togglePasswordForm() {
         const passwordForm = document.getElementById("passwordForm");
         const profileForm = document.getElementById("profileForm"); // Reference to the profile form
+        const profileDetails = document.getElementById("profileDetails");
+        const ordersForm = document.getElementById("ordersForm");
 
-        // Toggle visibility of the password form
-        passwordForm.style.display = passwordForm.style.display === "none" ? "block" : "none";
+        profileForm.style.display = "none";
+        profileDetails.style.display = "none";
+        ordersForm.style.display = "none";
 
-        // Hide the profile form if the password form is shown
-        if (passwordForm.style.display === "block") {
-          profileForm.style.display = "none";
+        if(passwordForm.style.display === "none"){
+          passwordForm.style.display = "block";
+          profileDetails.style.display = "none";
+        } else {
+          passwordForm.style.display = "none";
+          profileDetails.style.display = "block";
         }
       }
     </script>
