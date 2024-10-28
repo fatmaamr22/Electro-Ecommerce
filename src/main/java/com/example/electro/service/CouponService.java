@@ -2,11 +2,14 @@ package com.example.electro.service;
 
 import com.example.electro.model.Coupon;
 import com.example.electro.repository.CouponRepository;
+import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class CouponService {
     private CouponRepository couponRepo;
 

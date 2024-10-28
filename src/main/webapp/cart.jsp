@@ -284,7 +284,7 @@
                                     <div class="checkout_btn_inner d-flex align-items-center">
                                         <a class="gray_btn" href="/">Continue Shopping</a>
 <!--                                        <a class="primary-btn" href="#">Proceed to checkout</a>-->
-                                        <form action="orderDetails" method="get" id="coForm">
+                                        <form action="/order-details" method="get" id="coForm">
                                             <input type="hidden" name="coupon" id="hiddenValue">
 <%--                                            <c:if test = "${errorResponse!=null}">--%>
 <%--                                                <div id="loginError" class="text-danger">${errorResponse.message}</div>--%>
@@ -322,7 +322,7 @@
         function viewOrderDetails(){
             var valueFromDiv = document.getElementById('coVal').value;
             console.log(valueFromDiv)
-            window.location.href = window.location.origin + "/ecommerce/web/orderDetails?coupon=" + valueFromDiv;
+            window.location.href = window.location.origin + "/order-details?coupon=" + valueFromDiv;
         }
 
     </script>

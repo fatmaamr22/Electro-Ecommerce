@@ -57,7 +57,7 @@
         font-size: 24px;
         font-weight: bold;
       }
-      .edit-profile-btn,.edit-password-btn {
+      .edit-profile-btn,.edit-password-btn, .show-orders-btn {
         width: 170px;
         margin-top: 20px;
         padding: 10px 20px;
@@ -125,6 +125,7 @@
               <h2 class="profile-name" id="profile-name"></h2>
               <button class="edit-profile-btn" onclick="toggleEditForm()">Edit Profile</button>
               <button class="edit-password-btn" onclick="togglePasswordForm()">Change Password</button>
+              <button class="show-orders-btn" onclick="toggleOrdersForm()">My Orders</button>
 
             </div>
 
@@ -183,6 +184,70 @@
               <button type="button" class="cancel-btn" onclick="toggleEditForm()">Cancel</button>
             </form>
 
+            <!-- User Orders Form (Initially Hidden) -->
+            <form class="profile-form mt-4" id="ordersForm" style="display: none">
+              <h4>My Orders</h4>
+              <table class="table table-striped">
+                <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Total Price</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody id="ordersTableBody">
+                <!-- Orders will be populated here -->
+                </tbody>
+              </table>
+              <button type="button" class="cancel-btn" onclick="toggleOrdersForm()">Close</button>
+            </form>
+
+            <!-- Order Details Modal -->
+            <div id="orderDetailsModal" class="modal" tabindex="-1" role="dialog" style="display: none;">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Order Details</h5>
+                    <button type="button" class="close" onclick="closeOrderModal()">
+                      <span>&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body" id="orderDetailsBody" style="max-height: 400px; overflow-y: auto; text-align: center">
+                    <!-- Order details will be dynamically populated here -->
+                    <form>
+                      <div class="form-group">
+                        <label for="orderId">Order ID</label>
+                        <input type="text" id="orderId" class="form-control" readonly />
+                      </div>
+                      <div class="form-group">
+                        <label for="orderTotal">Total Price</label>
+                        <input type="text" id="orderTotal" class="form-control" readonly />
+                      </div>
+                      <div class="form-group">
+                        <label for="orderDate">Date</label>
+                        <input type="text" id="orderDate" class="form-control" readonly />
+                      </div>
+                      <div class="form-group">
+                        <label for="orderStatus">Status</label>
+                        <input type="text" id="orderStatus" class="form-control" readonly />
+                      </div>
+
+                      <div class="form-group">
+                        <label for="orderItems">Items</label>
+                        <textarea id="orderItems" class="form-control" rows="4" readonly></textarea>
+                      </div>
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeOrderModal()">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
             <!-- Profile Details (Visible before editing) -->
             <div id="profileDetails" class="profile-details">
               <h4>About</h4>
@@ -203,6 +268,7 @@
     <!-- start footer Area -->
     <c:import url="footer.jsp" />
 
+    <script src="assets/js/order-profile.js"></script>
     <script>
       function toggleEditForm() {
         const form = document.getElementById("profileForm");
@@ -258,7 +324,6 @@
           }
         }
       });
-
 
     </script>
 

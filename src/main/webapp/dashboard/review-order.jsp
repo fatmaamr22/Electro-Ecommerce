@@ -1,4 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -119,23 +120,44 @@
                 </div>
                 <!-- Order Details (Visible before editing) -->
                 <div id="orderDetails" class="order-details">
-                    <br>
-                    <h4>Order Summary:</h4>
-                    <br>
-                    <p><strong id="order-date">Order Date:</strong> <span id="order-date-value">${order.date}</span></p>
-                    <p><strong id="order-customer">Customer:</strong> <span id="order-customer-value">${order.customer.firstName} ${order.customer.lastName}</span></p>
-                    <p><strong id="order-total-price">Total Price:</strong> <span id="order-total-price-value">${order.totalPrice}</span></p>
-                    <p><strong id="order-status">Order Status:</strong> <span id="order-status-value">${order.state}</span></p>
-                    <br>
-                    <h4>Order Items:</h4>
-                    <br>
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Customer</th>
+                            <th>Total Price</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>${order.customer.firstName} ${order.customer.lastName}</td>
+                            <td><fmt:formatNumber value="${order.totalPrice/100}" type="number" minFractionDigits="2" maxFractionDigits="2"/></td>
+                            <td>${order.date}</td>
+                            <td>${order.state}</td>
+
+                        </tr>
+                        </tbody>
+                    </table>
+                    <h5>Items:</h5>
                     <ul id="order-items-list">
-                        <!-- Iterate over orderItems and display them -->
                         <c:forEach items="${order.orderItems}" var="item">
                             <li>
-                                <p><strong>Product:</strong> ${item.product.name}</p>
-                                <p><strong>Quantity:</strong> ${item.quantity}</p>
-                                <p><strong>Price:</strong> ${item.currentPrice}</p>
+                                <table class="table table-striped">
+                                    <tbody style="text-align: center">
+                                        <tr>
+                                            <td><img src="${item.product.image}" alt="product img" width="100px"></td>
+                                            <td>
+                                                <strong>Product:</strong> ${item.product.name}
+                                                <br>
+                                                <strong>Quantity:</strong> ${item.quantity}
+                                                <br>
+                                                <strong>Price:</strong> <fmt:formatNumber value="${item.currentPrice/100}" type="number" minFractionDigits="2" maxFractionDigits="2"/>
+                                            </td>
+                                        </tr>
+                                </tbody>
+                                </table>
+                                <hr>
                             </li>
                         </c:forEach>
                     </ul>

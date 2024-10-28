@@ -44,10 +44,10 @@ public class OrderService {
         return OrderMapper.INSTANCE.toDTO(orderRepo.findById(id).get());
     }
 
-    public List<OrderDTO> getOrdersbyCustomerId(int customerId, int pageNo, int size) {
+    public List<OrderDTO> getOrdersbyCustomerId(int customerId) {
         Customer customer = customerRepo.findById(customerId).get();
-        Page<Order> orders = orderRepo.findAllOrdersByCustomerId(customerId, PageRequest.of(pageNo, size));
-        return OrderMapper.INSTANCE.toDTOs(orders.getContent());
+        List<Order> orders = orderRepo.findOrdersByCustomerId(customerId);
+        return OrderMapper.INSTANCE.toDTOs(orders);
     }
 
     public List<OrderDTO> getOrdersbyCouponName(String couponName) {
@@ -103,6 +103,11 @@ public class OrderService {
             System.out.println("No Enough Stock for " + product.getName());
             throw new RuntimeException("No Enough Stock for " + product.getName());
         }
+    }
+
+    public OrderDTO updateOrderState(int id, OrderState state) {
+        Order order =  orderRepo.updateOrderState(state, id);
+        return OrderMapper.INSTANCE.toDTO(order);
     }
 
 }

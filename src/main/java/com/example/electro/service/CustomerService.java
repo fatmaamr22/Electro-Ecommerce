@@ -63,7 +63,11 @@ public Optional<Customer> findByEmail(String email) {return customerRepository.f
 
     public CustomerDTO findById(Integer id) {
     return CustomerMapper.INSTANCE.toDTO(customerRepository.findById(id).get());
-}
+    }
+
+    public Customer findCustomerById(Integer id) {
+        return customerRepository.findById(id).get();
+    }
 
     public List<CustomerDTO> getAllCustomers(int pageNo, int size) {
         int page = (pageNo > 0) ? pageNo - 1 : 0;

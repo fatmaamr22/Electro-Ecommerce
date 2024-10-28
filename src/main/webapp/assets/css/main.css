@@ -4039,6 +4039,7 @@ label {
 .filter-bar {
   padding: 0px 20px 10px 20px;
   background: #828bb3;
+  border-radius: 7px;
 }
 .filter-bar a,
 .filter-bar i {
@@ -4076,7 +4077,7 @@ label {
   margin-right: 10px;
 }
 .sorting .nice-select {
-  border-radius: 0px;
+  border-radius: 7px;
   border: 1px solid #eee;
   padding-right: 50px;
 }
@@ -4310,6 +4311,7 @@ label {
   font-size: 16px;
   font-weight: 400;
   color: #fff;
+  border-radius: 7px;
 }
 .sidebar-filter .head {
   line-height: 60px;
@@ -5158,6 +5160,7 @@ label {
   color: #222222;
   font-size: 13px;
   font-weight: normal;
+  border-radius: 7px;
 }
 @media (max-width: 570px) {
   .product_description_area .nav.nav-tabs li a {
@@ -5167,6 +5170,7 @@ label {
 .product_description_area .nav.nav-tabs li a.active {
   color: #fff;
   border: 1px solid transparent;
+  border-radius: 7px;
 }
 .product_description_area .tab-content {
   border-left: 1px solid #eee;
