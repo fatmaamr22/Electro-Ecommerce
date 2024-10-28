@@ -66,6 +66,7 @@ public class CustomerController {
     public String addNewUser(@ModelAttribute Customer customer, HttpSession session,
                              HttpServletResponse response) {
         // Hash the password
+        System.out.println("add USER ARRIVEEEED");
         String encodedPassword = passwordEncoder.encode(customer.getPassword());
         customer.setPassword(encodedPassword);
 
@@ -85,6 +86,7 @@ public class CustomerController {
         // Add the cookie to the response
         response.addCookie(jwtCookie);
 
+        System.out.println("New user added with ID:"+ customer.getId());
         // Merge temporary cart with user's cart
         temporaryCartService.mergeCarts(session, customer.getId());
 
