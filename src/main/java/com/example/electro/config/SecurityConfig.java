@@ -53,7 +53,6 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // Disable CSRF for stateless APIs
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/dashboard/**").hasRole("ADMIN") // Admin-only access to /dashboard
-                        .requestMatchers("/").hasRole("USER")
                         .anyRequest().permitAll() // Allow all other requests without restrictions
                 )
                 .sessionManagement(sess -> sess

@@ -249,19 +249,55 @@
               </div>
             </div>
 
-
             <!-- Profile Details (Visible before editing) -->
-            <div id="profileDetails" class="profile-details">
-              <h4>About</h4>
-              <p><strong id="customer-firstname">First Name:</strong> <span id="customer-firstname-value"></span></p>
-              <p><strong id="customer-lastname">Last Name:</strong> <span id="customer-lastname-value"></span></p>
-              <p><strong id="customer-email">Email:</strong> <span id="customer-email-value"></span></p>
-              <p><strong id="customer-address">Address:</strong> <span id="customer-address-value"></span></p>
-              <p><strong id="customer-phone">Phone:</strong> <span id="customer-phone-value"></span></p>
-              <p><strong id="customer-date">Date Of Birth:</strong> <span id="customer-date-value"></span></p>
-              <p><strong id="customer-job">Job:</strong> <span id="customer-job-value"></span></p>
-              <p><strong id="customer-interests">Interests:</strong> <span id="customer-interests-value"></span></p>
+            <br>
+            <br>
+            <br>
+            <div id="profileDetails" class="profile-details card">
+              <h4 class="profile-title">About You</h4>
+
+              <div class="profile-item">
+                <i class="fas fa-user"></i>
+                <p><strong>First Name:</strong> <span id="customer-firstname-value"></span></p>
+              </div>
+
+              <div class="profile-item">
+                <i class="fas fa-user-tag"></i>
+                <p><strong>Last Name:</strong> <span id="customer-lastname-value"></span></p>
+              </div>
+
+              <div class="profile-item">
+                <i class="fas fa-envelope"></i>
+                <p><strong>Email:</strong> <span id="customer-email-value"></span></p>
+              </div>
+
+              <div class="profile-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <p><strong>Address:</strong> <span id="customer-address-value"></span></p>
+              </div>
+
+              <div class="profile-item">
+                <i class="fas fa-phone"></i>
+                <p><strong>Phone:</strong> <span id="customer-phone-value"></span></p>
+              </div>
+
+              <div class="profile-item">
+                <i class="fas fa-birthday-cake"></i>
+                <p><strong>Date Of Birth:</strong> <span id="customer-date-value"></span></p>
+              </div>
+
+              <div class="profile-item">
+                <i class="fas fa-briefcase"></i>
+                <p><strong>Job:</strong> <span id="customer-job-value"></span></p>
+              </div>
+
+              <div class="profile-item">
+                <i class="fas fa-heart"></i>
+                <p><strong>Interests:</strong> <span id="customer-interests-value"></span></p>
+              </div>
             </div>
+
+
           </div>
         </div>
       </div>
@@ -399,25 +435,39 @@
       function toggleEditForm() {
         const profileForm = document.getElementById("profileForm");
         const passwordForm = document.getElementById("passwordForm");
+        const profileDetails = document.getElementById("profileDetails");
+        const ordersForm = document.getElementById("ordersForm");
 
         // Close the password form if it's open
-        if (passwordForm.style.display === "block") {
-          passwordForm.style.display = "none";
-        }
+        passwordForm.style.display = "none";
+        profileDetails.style.display = "none";
+        ordersForm.style.display = "none";
 
-        // Toggle the visibility of the profile form
-        profileForm.style.display = profileForm.style.display === "none" ? "block" : "none";
+        if(profileForm.style.display === "none"){
+          profileForm.style.display = "block";
+          profileDetails.style.display = "none";
+        } else {
+          profileForm.style.display = "none";
+          profileDetails.style.display = "block";
+        }
       }
+
       function togglePasswordForm() {
         const passwordForm = document.getElementById("passwordForm");
         const profileForm = document.getElementById("profileForm"); // Reference to the profile form
+        const profileDetails = document.getElementById("profileDetails");
+        const ordersForm = document.getElementById("ordersForm");
 
-        // Toggle visibility of the password form
-        passwordForm.style.display = passwordForm.style.display === "none" ? "block" : "none";
+        profileForm.style.display = "none";
+        profileDetails.style.display = "none";
+        ordersForm.style.display = "none";
 
-        // Hide the profile form if the password form is shown
-        if (passwordForm.style.display === "block") {
-          profileForm.style.display = "none";
+        if(passwordForm.style.display === "none"){
+          passwordForm.style.display = "block";
+          profileDetails.style.display = "none";
+        } else {
+          passwordForm.style.display = "none";
+          profileDetails.style.display = "block";
         }
       }
     </script>

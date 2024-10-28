@@ -4039,7 +4039,6 @@ label {
 .filter-bar {
   padding: 0px 20px 10px 20px;
   background: #828bb3;
-  border-radius: 7px;
 }
 .filter-bar a,
 .filter-bar i {
@@ -4077,7 +4076,6 @@ label {
   margin-right: 10px;
 }
 .sorting .nice-select {
-  border-radius: 7px;
   border: 1px solid #eee;
   padding-right: 50px;
 }
@@ -4311,7 +4309,6 @@ label {
   font-size: 16px;
   font-weight: 400;
   color: #fff;
-  border-radius: 7px;
 }
 .sidebar-filter .head {
   line-height: 60px;
