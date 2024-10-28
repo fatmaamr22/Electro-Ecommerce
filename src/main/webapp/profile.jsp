@@ -62,7 +62,7 @@
         margin-top: 20px;
         padding: 10px 20px;
         border: none;
-        background-color: #3C5B6F;
+        background-color: #1F6E8C;
         color: white;
         border-radius: 5px;
         cursor: pointer;
