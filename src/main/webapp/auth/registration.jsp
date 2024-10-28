@@ -127,14 +127,14 @@
                     <div class="hover">
                         <h4>Already have an account?</h4>
                         <p>Login to access your account.</p>
-                        <a class="primary-btn" href="../login.html">Log In</a>
+                        <a class="primary-btn" href="../auth/login">Log In</a>
                     </div>
                 </div>
             </div>
             <div class="col-lg-6">
                 <div class="login_form_inner">
                     <h3>Create an Account</h3>
-                    <form class="row login_form" action="/ecommerce/web/auth/register" method="post" id="registrationForm">
+                    <form class="row login_form" action="/customer/addNewUser" method="post" id="registrationForm">
                         <div class="col-md-12 form-group">
                             <input type="text" class="form-control" id="firstName" name="firstName" placeholder="First Name" required>
                         </div>
@@ -159,7 +159,7 @@
                             <input type="tel" class="form-control" id="phone" name="phone" placeholder="Phone" pattern="[0-9]{11}" title="Phone number must be 11 digits long." required>
                         </div>
                         <div class="col-md-12 form-group">
-                            <input class="form-control" type="date" id="date" name="date" placeholder="Date Of Birth"
+                            <input class="form-control" type="date" id="date" name="dateOfBirth" placeholder="Date Of Birth"
                                    max="2013-01-01" min="1900-01-01" required />
                         </div>
                         <div class="col-md-12 form-group">
@@ -221,22 +221,25 @@
     function checkValidEmail() {
         const xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
-            if (this.readyState == 4 && this.status == 200) {
-                var responseText = this.responseText;
-                if(responseText == "true"){
-                    mailIsAvailable = true;
-                    document.getElementById("emailError").innerText = "";
-                }
-                else {
-                    mailIsAvailable = false;
-                    document.getElementById("emailError").innerText = "This email is not available";
-
+            if (this.readyState === 4) {
+                console.log("Response:", this.responseText); // Log response
+                if (this.status === 200) {
+                    const responseText = this.responseText;
+                    if (responseText === "true") {
+                        mailIsAvailable = true;
+                        document.getElementById("emailError").innerText = "";
+                    } else {
+                        mailIsAvailable = false;
+                        document.getElementById("emailError").innerText = "This email is not available";
+                    }
+                } else {
+                    console.error("Error checking email availability:", this.status, this.statusText);
                 }
             }
         };
         xhttp.open(
             "GET",
-            "register?email=" + document.getElementById("email").value,
+            "/customer/check-email?email=" + document.getElementById("email").value,
             true
         );
         xhttp.send();
@@ -245,6 +248,10 @@
         // Check for password match on input
         $('#confirmPassword, #password').on('input', function () {
             checkPasswords();
+        });
+
+        $('#email').on('input', function() {
+            checkValidEmail();
         });
 
         // Prevent form submission if passwords don't match
