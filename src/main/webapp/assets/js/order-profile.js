@@ -3,13 +3,20 @@ function toggleOrdersForm() {
     const ordersForm = document.getElementById("ordersForm");
     const profileForm = document.getElementById("profileForm");
     const passwordForm = document.getElementById("passwordForm");
-    const details = document.getElementById("profileDetails");
+    const profileDetails = document.getElementById("profileDetails");
 
     // Toggle visibility of forms
-    ordersForm.style.display = ordersForm.style.display === "none" ? "block" : "none";
     profileForm.style.display = "none";
     passwordForm.style.display = "none";
-    details.style.display = "none";
+    profileDetails.style.display = "none";
+
+    if(ordersForm.style.display === "none"){
+        ordersForm.style.display = "block";
+        profileDetails.style.display = "none";
+    } else {
+        ordersForm.style.display = "none";
+        profileDetails.style.display = "block";
+    }
 
     // Fetch orders if the form is being shown
     if (ordersForm.style.display === "block") {
