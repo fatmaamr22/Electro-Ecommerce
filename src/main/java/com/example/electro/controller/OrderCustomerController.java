@@ -2,7 +2,6 @@ package com.example.electro.controller;
 
 import com.example.electro.customDetails.CustomUserDetails;
 import com.example.electro.dto.ErrorResponse;
-import com.example.electro.dto.OrderDTO;
 import com.example.electro.dto.payment.PaymentDTO;
 import com.example.electro.model.Customer;
 import com.example.electro.model.Order;
@@ -18,7 +17,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.List;
 
 @Controller
 @RequestMapping("order")
@@ -61,11 +59,10 @@ public class OrderCustomerController {
                 Order order = orderService.addOrder(customer, coupon);
                 if(order != null) {
                     // PAYMENT
-                    System.out.println("payment inshallah");
                     PaymentDTO paymentDTO = new PaymentDTO(customer, order);
                     String paymentLink = paymentService.generatePaymentLink(paymentDTO);
                     return "redirect:" + paymentLink;
-                } else{
+                } else {
                     ErrorResponse errorResponse = new ErrorResponse();
                     errorResponse.setMessage("No Enough Stock");
                     model.addAttribute("errorResponse", errorResponse);

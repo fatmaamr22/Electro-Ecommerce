@@ -14,7 +14,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -62,7 +61,6 @@ public class ProductController {
                                                              @RequestBody ProductWithSpecsDTO productWithSpecsDTO
     ) {
 
-
         ProductWithSpecsDTO updatedProduct = productService.updateProduct(id, productWithSpecsDTO);
         productWithSpecsDTO.getImageURLs().stream().forEach(System.out::println);
         return ResponseEntity.ok(updatedProduct);
@@ -74,7 +72,6 @@ public class ProductController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ProductDTO> deleteProduct(@PathVariable int id){
-
         productService.deleteProduct(id);
         return ResponseEntity.ok().build();
     }

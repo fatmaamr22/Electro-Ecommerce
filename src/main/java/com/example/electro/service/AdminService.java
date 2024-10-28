@@ -12,12 +12,10 @@ import java.util.Optional;
 public class AdminService implements UserDetailsService {
     private AdminRepository adminRepository;
 
-
     // To compare encrypted passwords
     public AdminService(AdminRepository adminRepository) {
         this.adminRepository = adminRepository;
     }
-
 
     public Optional<Admin> findById(Integer id) {
         return adminRepository.findById(id);
@@ -48,7 +46,5 @@ public class AdminService implements UserDetailsService {
                 .map(CustomAdminDetails::new) // Return CustomAdminDetails if found
                 .orElse(null); // Return null if not found
     }
-
-
 
 }

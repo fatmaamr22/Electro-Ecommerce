@@ -2,7 +2,6 @@ package com.example.electro.service;
 
 import com.example.electro.dto.CartItemDTO;
 import com.example.electro.model.*;
-import com.example.electro.repository.CartHasProductRepository;
 import com.example.electro.repository.CartRepository;
 import com.example.electro.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;

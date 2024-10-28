@@ -31,8 +31,6 @@ public class CartService {
         this.productDAO = productDAO;
     }
 
-
-
     // Adds an item to the cart with quantity 1
     public void addCartItem(int customerId, int productId) {
         addCartItemWithQuantity(customerId, productId, 1);
@@ -110,7 +108,6 @@ public class CartService {
 
         return false; // Cart or Product not found
     }
-
 
     // Removes an item from the cart
     public void removeCartItem(int customerId, int productId) {

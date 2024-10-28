@@ -1,14 +1,9 @@
 package com.example.electro.dto;
 
-import com.example.electro.model.Image;
-import com.example.electro.model.ProductSpecs;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -24,5 +19,4 @@ public class ProductSpecsDTO {
     private int batteryLife;
     private String os;
     private double weight;
-
 }

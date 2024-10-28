@@ -1,6 +1,5 @@
 package com.example.electro.repository;
 
-import com.example.electro.dto.OrderDTO;
 import com.example.electro.enums.OrderState;
 import com.example.electro.model.Order;
 import org.springframework.data.domain.Page;

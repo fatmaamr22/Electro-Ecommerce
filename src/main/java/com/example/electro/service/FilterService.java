@@ -2,7 +2,6 @@ package com.example.electro.service;
 
 import com.example.electro.dto.CategoryDTO;
 import com.example.electro.mapper.CategoryMapper;
-import com.example.electro.model.Category;
 import com.example.electro.repository.CategoryRepository;
 import com.example.electro.repository.ProductRepository;
 import jakarta.persistence.EntityManager;
@@ -10,7 +9,6 @@ import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
 
 @Service
