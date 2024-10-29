@@ -69,12 +69,12 @@
                         <c:choose>
                             <c:when test="<%= tokenExists %>">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="auth/logout">Logout</a>
+                                    <a class="nav-link" href="/auth/logout">Logout</a>
                                 </li>
                             </c:when>
                             <c:otherwise>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="auth/login">Login</a>
+                                    <a class="nav-link" href="/auth/login">Login</a>
                                 </li>
                             </c:otherwise>
                         </c:choose>
@@ -97,7 +97,7 @@
                         <c:if test="<%= tokenExists %>">
                         <li class="nav-item">
                             <button class="search">
-                                <a href="profile.jsp" class="cart"><span class="lnr fa-regular fa-user" id="search"></span></a>
+                                <a href="/profile.jsp" class="cart"><span class="lnr fa-regular fa-user" id="search"></span></a>
                             </button>
                         </li>
                         </c:if>

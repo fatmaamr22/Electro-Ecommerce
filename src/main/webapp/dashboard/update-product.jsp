@@ -12,7 +12,43 @@
     <link rel="stylesheet" href="/../assets/css/style.css">
 
     <style>
-        /* Loader container styles */
+        /* Hide the default file input by making it transparent */
+        .custom-file-input {
+            opacity: 0;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        /* Style the custom label as a button */
+        .custom-file-label-wrapper {
+            display: inline-block;
+            position: relative;
+            background-color: #4CAF50; /* Green background */
+            color: white;
+            border-radius: 4px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        /* Adjust hover and active styles */
+        .custom-file-label-wrapper:hover {
+            background-color: #45a049;
+        }
+
+        /* Consistent image styling */
+        .product-image, .additional-images img {
+            max-width: 100px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin: 5px 10px 0 0;
+        }
+
+        /* Loader styling */
         .loader-container {
             position: fixed;
             top: 0;
@@ -27,7 +63,6 @@
             visibility: hidden; /* Initially hidden */
         }
 
-        /* Loader (spinner) styles */
         .loader {
             border: 16px solid #f3f3f3;
             border-radius: 50%;
@@ -44,6 +79,9 @@
         }
     </style>
 
+
+
+
 </head>
 
 <body>
@@ -52,21 +90,17 @@
 
 <section class="container section_gap">
     <div class="row">
-        <div class="col-lg-6">
-            <br>
-            <h3>Update Product</h3>
-            <form class="row login_form"  id="updateProductForm">
-                <!-- Hidden field to hold product ID -->
+        <div class="col-lg-6 mx-auto">
+            <form class="row login_form" id="updateProductForm">
                 <input type="hidden" name="id" value="${product.id}">
 
-                <!-- Pre-populated Product Basic Info Fields -->
                 <div class="col-md-12 form-group">
                     <label for="name">Product Name</label>
                     <input type="text" class="form-control" id="name" name="name" value="${product.name}" required>
                 </div>
                 <div class="col-md-12 form-group">
                     <label for="price">Price</label>
-                    <input type="number" class="form-control" id="price" name="price" value="${product.price/100}" required step="0.01">
+                    <input type="number" class="form-control" id="price" name="price" value="${product.price / 100}" required step="0.01">
                 </div>
                 <div class="col-md-12 form-group">
                     <label for="description">Description</label>
@@ -78,36 +112,73 @@
                 </div>
                 <div class="col-md-12 form-group">
                     <label for="brandName">Brand Name</label>
-                    <input type="text" class="form-control" id="brandName" name="brandName" value="${product.brandName}" required>
+                    <select class="form-control" id="brandName" name="brandName" required>
+                        <option value="" disabled>Select Brand</option>
+                        <c:if test="${brandList != null}">
+                            <c:forEach items="${brandList}" var="brandName">
+                                <option value="${brandName}" ${brandName == product.brandName ? 'selected' : ''}>${brandName}</option>
+                            </c:forEach>
+                        </c:if>
+                    </select>
                 </div>
-
-
-                <!-- Main Image Display and Upload -->
-                <div class="col-md-12 form-group">
+                <div class="col-md-12 form-group clearfix">
                     <label for="mainImage">Main Image</label>
-                    <input type="file" class="form-control" id="mainImage" name="mainImage" accept="image/*">
-                    <img src="${product.image}" alt="Product Image" width="100">
+                    <div class="upload-group">
+                        <!-- Wrapper for the file input and custom label -->
+                        <div class="custom-file-label-wrapper">
+                            <input type="file" class="custom-file-input" id="mainImage" name="mainImage" accept="image/*">
+                            <span>Choose Image</span>
+                        </div>
+                        <img src="${product.image}" alt="Product Image" class="product-image">
+                    </div>
                 </div>
 
-                <!-- Additional Images Display and Upload -->
-                <div class="col-md-12 form-group">
-                    <label for="additionalImages">Add Additional Images</label>
-                    <input type="file" class="form-control" id="additionalImages" name="additionalImages" accept="image/*" multiple>
-                    <c:if test="${product.images != null && !product.images.isEmpty()}">
-                        <p>Additional Images:</p>
-                        <c:forEach items="${product.images}" var="image">
-                            <img src="${image.url}" alt="Product Image" width="100">
-                        </c:forEach>
-                    </c:if>
+                <div class="col-md-12 form-group clearfix">
+                    <label for="additionalImages">Additional Images</label>
+                    <div class="upload-group">
+                        <div class="custom-file-label-wrapper">
+                            <input type="file" class="custom-file-input" id="additionalImages" name="additionalImages" accept="image/*" multiple>
+                            <span>Choose Images</span>
+                        </div>
+                        <div class="additional-images">
+                            <c:if test="${product.images != null && !product.images.isEmpty()}">
+                                <p>Additional Images:</p>
+                                <c:forEach items="${product.images}" var="image">
+                                    <img src="${image.url}" alt="Product Image">
+                                </c:forEach>
+                            </c:if>
+                        </div>
+                    </div>
                 </div>
-                <!-- Pre-populated Product Specs Fields -->
+
+
+
+
+
+
+
                 <div class="col-md-12 form-group">
                     <label for="processor">Processor</label>
-                    <input type="text" class="form-control" id="processor" name="processor" value="${product.specs.processor}" required>
+                    <select class="form-control" id="processor" name="processor" required>
+                        <option value="" disabled>Select Processor</option>
+                        <c:if test="${processorList != null}">
+                            <c:forEach items="${processorList}" var="processor">
+                                <option value="${processor}" ${processor == product.specs.processor ? 'selected' : ''}>${processor}</option>
+                            </c:forEach>
+                        </c:if>
+                    </select>
                 </div>
+
                 <div class="col-md-12 form-group">
                     <label for="memory">Memory (GB)</label>
-                    <input type="number" class="form-control" id="memory" name="memory" value="${product.specs.memory}" required>
+                    <select class="form-control" id="memory" name="memory" required>
+                        <option value="" disabled>Select Memory</option>
+                        <c:if test="${memoryList != null}">
+                            <c:forEach items="${memoryList}" var="memory">
+                                <option value="${memory}" ${memory == product.specs.memory ? 'selected' : ''}>${memory}</option>
+                            </c:forEach>
+                        </c:if>
+                    </select>
                 </div>
                 <div class="col-md-12 form-group">
                     <label for="storage">Storage</label>
@@ -127,14 +198,20 @@
                 </div>
                 <div class="col-md-12 form-group">
                     <label for="os">Operating System</label>
-                    <input type="text" class="form-control" id="os" name="os" value="${product.specs.os}" required>
+                    <select class="form-control" id="os" name="batteryLife" required>
+                        <option value="" disabled>Select Operating System</option>
+                        <c:if test="${osList != null}">
+                        <c:forEach items="${osList}" var="os">
+                        <option value="${os}" ${os == product.specs.os ? 'selected' : ''}>${os}</option>
+                        </c:forEach>
+                        </c:if>
+                    </select>
                 </div>
                 <div class="col-md-12 form-group">
                     <label for="weight">Weight (kg)</label>
                     <input type="number" class="form-control" id="weight" name="weight" value="${product.specs.weight}" step="0.01" required>
                 </div>
 
-                <!-- Pre-selected Category -->
                 <div class="col-md-12 form-group">
                     <label for="category">Select Category</label>
                     <select class="form-control" id="category" name="category" required>
@@ -147,7 +224,6 @@
                     </select>
                 </div>
 
-                <!-- Update Button -->
                 <div class="col-md-12 form-group">
                     <button type="button" class="primary-btn" id="uploadImagesBtn">Update Product</button>
                 </div>
