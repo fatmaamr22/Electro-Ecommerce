@@ -1,6 +1,7 @@
 package com.example.electro.controller;
 
 import com.example.electro.service.CategoryService;
+import com.example.electro.service.FilterService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,14 +10,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("dashboard/create-product")
 public class CreateProductController {
-    CategoryService categoryService;
-    public CreateProductController(CategoryService categoryService){
-        this.categoryService = categoryService;
+    FilterService filterService;
+    public CreateProductController(FilterService filterService){
+        this.filterService = filterService;
     }
 
     @GetMapping
     public String updateProductView( Model model) {
-        model.addAttribute("categoryList",categoryService.findAll());
+        model.addAttribute("brandList", filterService.getBrands());
+        model.addAttribute("processorList", filterService.getProcessors());
+        model.addAttribute("memoryList", filterService.getMemoryList());
+        model.addAttribute("osList", filterService.getOsList());
+        model.addAttribute("batteryList", filterService.getBatteryList());
+        model.addAttribute("categoryList", filterService.getCategories());
         return "dashboard/add-product";
     }
 }

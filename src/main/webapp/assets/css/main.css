@@ -4392,58 +4392,35 @@ label {
   }
 }
 .pixel-radio {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  -o-appearance: none;
   appearance: none;
   position: relative;
-  right: 0;
-  bottom: 0;
-  left: 0;
   height: 20px;
   width: 20px;
-  -webkit-transition: all 0.15s ease-out 0s;
-  -moz-transition: all 0.15s ease-out 0s;
-  transition: all 0.15s ease-out 0s;
-  background: #fff;
-  border: 1px solid #eee;
-  color: #fff;
-  cursor: pointer;
-  display: inline-block;
   margin-right: 10px;
-  outline: none;
-  position: relative;
-  z-index: 1;
+  border: 2px solid #3c5b6f;
+  background-color: #fff;
+  cursor: pointer;
+  transition: all 0.15s ease-out;
 }
 
 .pixel-radio:checked {
-  border: 7px solid #3c5b6f;
+  background-color: #3c5b6f;
+  border-color: #3c5b6f;
 }
 
 .pixel-radio:checked::after {
-  -webkit-animation: click-wave 0.65s;
-  -moz-animation: click-wave 0.65s;
-  animation: click-wave 0.65s;
-  background: #3c5b6f;
-  content: "";
-  display: block;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  position: relative;
-  z-index: 2;
-  opacity: 0;
+  content: '✔';
+  color: #fff;
+  font-size: 14px;
+  position: absolute;
+  top: -3px;
+  left: 3px;
 }
 
-.pixel-radio {
-  border-radius: 50%;
-  top: 6px;
+.pixel-radio:hover {
+  border-color: #153448;
 }
 
-.pixel-radio::after {
-  border-radius: 50%;
-}
 
 .price-range-area {
   padding: 30px 30px 0 30px;
