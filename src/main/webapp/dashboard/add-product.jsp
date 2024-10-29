@@ -11,6 +11,40 @@
     <link rel="stylesheet" href="../assets/css/all.css">
     <link rel="stylesheet" href="../assets/css/style.css">
     <style>
+        .custom-file-input {
+            opacity: 0;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        /* Style the custom label as a button */
+        .custom-file-label-wrapper {
+            display: inline-block;
+            position: relative;
+            background-color: #4CAF50; /* Green background */
+            color: white;
+            border-radius: 4px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        /* Adjust hover and active styles */
+        .custom-file-label-wrapper:hover {
+            background-color: #45a049;
+        }
+
+        /* Consistent image styling */
+        .product-image, .additional-images img {
+            max-width: 100px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin: 5px 10px 0 0;
+        }
         /* Loader container styles */
         .loader-container {
             position: fixed;
@@ -74,29 +108,61 @@
                 </div>
                 <div class="col-md-12 form-group">
                     <label for="brandName">Brand Name</label>
-                    <input type="text" class="form-control" id="brandName" name="brandName" placeholder="Brand Name" required>
+                    <select class="form-control" id="brandName" name="brandName" required>
+                        <option value="" disabled selected>Select Brand</option>
+                        <c:if test="${brandList != null}">
+                            <c:forEach items="${brandList}" var="brandName">
+                                <option value="${brandName}" ${brandName == product.brandName ? 'selected' : ''}>${brandName}</option>
+                            </c:forEach>
+                        </c:if>
+                    </select>
                 </div>
 
 
                 <!-- Main Image Upload -->
-                <div class="col-md-12 form-group">
+                <div class="col-md-12 form-group clearfix">
                     <label for="mainImage">Main Image</label>
-                    <input type="file" class="form-control" id="mainImage" name="mainImage" accept="image/*" required>
+                    <div class="upload-group">
+                        <!-- Wrapper for the file input and custom label -->
+                        <div class="custom-file-label-wrapper">
+                            <input type="file" class="custom-file-input" id="mainImage" name="mainImage" accept="image/*">
+                            <span>Choose Image</span>
+                        </div>
+                    </div>
                 </div>
                 <!-- Additional Images Display and Upload -->
-                <div class="col-md-12 form-group">
-                    <label for="additionalImages">Add Additional Images</label>
-                    <input type="file" class="form-control" id="additionalImages" name="additionalImages" accept="image/*" multiple>
+                <div class="col-md-12 form-group clearfix">
+                    <label for="additionalImages">Additional Images</label>
+                    <div class="upload-group">
+                        <div class="custom-file-label-wrapper">
+                            <input type="file" class="custom-file-input" id="additionalImages" name="additionalImages" accept="image/*" multiple>
+                            <span>Add Images</span>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Product Specs Fields -->
                 <div class="col-md-12 form-group">
                     <label for="processor">Processor</label>
-                    <input type="text" class="form-control" id="processor" name="processor" placeholder="Processor" required>
+                    <select class="form-control" id="processor" name="processor" required>
+                        <option value="" disabled selected>Select Processor</option>
+                        <c:if test="${processorList != null}">
+                            <c:forEach items="${processorList}" var="processor">
+                                <option value="${processor}" ${processor == product.specs.processor ? 'selected' : ''}>${processor}</option>
+                            </c:forEach>
+                        </c:if>
+                    </select>
                 </div>
                 <div class="col-md-12 form-group">
                     <label for="memory">Memory (GB)</label>
-                    <input type="number" class="form-control" id="memory" name="memory" placeholder="Memory (GB)" required>
+                    <select class="form-control" id="memory" name="memory" required>
+                        <option value="" disabled selected>Select Memory</option>
+                        <c:if test="${memoryList != null}">
+                            <c:forEach items="${memoryList}" var="memory">
+                                <option value="${memory}" ${memory == product.specs.memory ? 'selected' : ''}>${memory}</option>
+                            </c:forEach>
+                        </c:if>
+                    </select>
                 </div>
                 <div class="col-md-12 form-group">
                     <label for="storage">Storage</label>
@@ -116,7 +182,14 @@
                 </div>
                 <div class="col-md-12 form-group">
                     <label for="os">Operating System</label>
-                    <input type="text" class="form-control" id="os" name="os" placeholder="Operating System" required>
+                    <select class="form-control" id="os" name="batteryLife" required>
+                        <option value="" disabled selected>Select Operating System</option>
+                        <c:if test="${osList != null}">
+                            <c:forEach items="${osList}" var="os">
+                                <option value="${os}" ${os == product.specs.os ? 'selected' : ''}>${os}</option>
+                            </c:forEach>
+                        </c:if>
+                    </select>
                 </div>
                 <div class="col-md-12 form-group">
                     <label for="weight">Weight (kg)</label>
