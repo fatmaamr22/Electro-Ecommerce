@@ -1,6 +1,7 @@
 package com.example.electro.controller;
 
 import com.example.electro.service.CategoryService;
+import com.example.electro.service.FilterService;
 import com.example.electro.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,16 +14,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class UpdateProductController {
 
     ProductService productService;
-    CategoryService categoryService;
-    public UpdateProductController (ProductService productService,CategoryService categoryService){
+    FilterService filterService;
+    public UpdateProductController (ProductService productService,FilterService filterService){
         this.productService = productService;
-        this.categoryService = categoryService;
+        this.filterService = filterService;
     }
 
     @GetMapping("/{id}")
     public String updateProductView(@PathVariable("id") int id,Model model) {
         model.addAttribute("product",productService.findById(id));
-        model.addAttribute("categoryList",categoryService.findAll());
+        model.addAttribute("categoryList",filterService.getCategories());
+        model.addAttribute("brandList", filterService.getBrands());
+        model.addAttribute("processorList", filterService.getProcessors());
+        model.addAttribute("memoryList", filterService.getMemoryList());
+        model.addAttribute("osList", filterService.getOsList());
+        model.addAttribute("batteryList", filterService.getBatteryList());
         return "dashboard/update-product";
     }
 }
