@@ -1,4 +1,4 @@
-# Electro - A Simple E-Commerce Web Application for Laptops
+# Electro 💻- A Simple E-Commerce Web Application for Laptops
 
 ## Project Overview
 
@@ -64,20 +64,20 @@ The project provides a full-featured e-commerce platform with both user and admi
 ## Technologies Used
 
 
-### Frontend
+### Frontend 🎨
 - **HTML5**: Structuring the web pages.
 - **CSS3**: Styling the application with a responsive, mobile-first approach.
 - **JavaScript & JQuery**: Client-side validation and dynamic UI updates.
 
-### Backend
+### Backend 🔧
 - **Spring Boot**: Core server-side framework for business logic.
 - **Spring Security**: Handles authentication and data security.
 - **Spring Data JPA & Hibernate**: ORM for efficient database operations
 
-### Database
+### Database 🧱
 - **MySQL**: Relational database for storing product, user, and order details.
 
-### Asynchronous Development
+### Asynchronous Development ✨
 - **AJAX & JavaScript**: Implemented asynchronous features for enhanced user interactions.
 
 
@@ -104,6 +104,7 @@ The project provides a full-featured e-commerce platform with both user and admi
     - Create a new database in MySQL.
     - Update the database connection settings in `application.properties` 
 
+
 3. **Build the Project Using Maven**
     ```bash
     mvn clean install
@@ -112,6 +113,7 @@ The project provides a full-featured e-commerce platform with both user and admi
 4. **Deploy the Project on Apache Tomcat**
     - Copy the generated `.war` file from the `target` directory to the `webapps` folder of your Tomcat installation.
 
+
 5. **Access the Application**
     - Navigate to `http://localhost:8080/` in your web browser or your custom port number.
 
@@ -119,11 +121,11 @@ The project provides a full-featured e-commerce platform with both user and admi
 
 ## Usage
 
-### Admin Panel
+### Admin Panel 🧑‍💻
 - **Login**: Admin logs in using predefined credentials (configured in the database).
 - **Manage Products**: Admin can add, edit, or delete laptops, view customer profiles and track orders.
 
-### User Panel
+### User Panel 🙋‍♀️
 - **Sign Up & Profile Management**: New users sign up with personal information and update their own profile.
 - **View Products**: Browse available laptops and add them to the shopping cart.
 - **Shopping Cart**: Manage cart items, adjust quantities, and proceed to checkout.
