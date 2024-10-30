@@ -18,7 +18,7 @@ public class PaymentController {
         this.orderService = orderService;
     }
 
-    @PostMapping
+    @GetMapping
     public String handlePaymentCallback(@RequestBody String Payload, Model model) {
         JsonObject jsonObject = JsonParser.parseString(Payload).getAsJsonObject();
         boolean state = jsonObject.getAsJsonObject("obj").getAsJsonPrimitive("success").getAsBoolean();
