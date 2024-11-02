@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 public interface OrderRepository extends JpaRepository<Order,Integer>, CustomOrderRepo{
@@ -17,7 +19,8 @@ public interface OrderRepository extends JpaRepository<Order,Integer>, CustomOrd
     List<Order> findOrdersByCoupon(@Param("couponName") String couponName);
     List<Order> findOrdersByCustomerId(Integer customerId);
 
+    @Transactional
     @Modifying
     @Query("update Order o set o.state = :state where o.id = :orderId")
-    Order updateOrderState(@Param("state") OrderState state, @Param("orderId") int orderId);
+    void updateOrderState(@Param("state") OrderState state, @Param("orderId") int orderId);
 }

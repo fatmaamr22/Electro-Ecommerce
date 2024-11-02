@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -56,6 +57,7 @@ public class ProductController {
     public ResponseEntity<ProductWithSpecsDTO> findProductById(@PathVariable Integer id){
         return ResponseEntity.ok(productService.findById(id));
     }
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<ProductWithSpecsDTO> updateProduct(@PathVariable int id,
                                                              @RequestBody ProductWithSpecsDTO productWithSpecsDTO
@@ -65,11 +67,13 @@ public class ProductController {
         productWithSpecsDTO.getImageURLs().stream().forEach(System.out::println);
         return ResponseEntity.ok(updatedProduct);
     }
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<ProductWithSpecsDTO> createProduct(@RequestBody ProductWithSpecsDTO productWithSpecsDTO){
         return ResponseEntity.ok(productService.createProduct(productWithSpecsDTO));
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<ProductDTO> deleteProduct(@PathVariable int id){
         productService.deleteProduct(id);

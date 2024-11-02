@@ -62,3 +62,27 @@
   background: #1976D2;
 }
 
+/* Google Sign-In Button Styles */
+#google-signin {
+  display: inline-flex; /* Use flex to align items */
+  align-items: center; /* Center items vertically */
+  background-color: #4285F4; /* Google blue */
+  color: white;
+  text-align: center;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 16px;
+  transition: background-color 0.3s;
+  margin: 0 auto; /* Center the link within the container */
+}
+
+#google-signin:hover {
+  background-color: #357AE8; /* Darker blue on hover */
+}
+
+#google-signin:active {
+  background-color: #2C7BE5; /* Even darker blue when active */
+}
+
+

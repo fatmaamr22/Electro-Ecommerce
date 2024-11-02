@@ -75,6 +75,58 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        /* Notification Container */
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* Notification Styling */
+        .notification {
+            background-color: #4caf50;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 5px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            opacity: 1;
+            cursor: pointer;
+            transition: opacity 0.5s ease;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Different colors for notification types */
+        .notification.success { background-color: #4caf50; }
+        .notification.error { background-color: #f44336; }
+        .notification.warning { background-color: #ff9800; }
+
+        /* Dismiss button */
+        .notification .dismiss {
+            margin-left: 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Fade In and Out Animations */
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fade-out {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+
     </style>
 </head>
 
@@ -216,6 +268,8 @@
             <div id="loader" class="loader-container">
                 <div class="loader"></div>
             </div>
+            <div id="notification-container" class="notification-container"></div>
+
         </div>
     </div>
 </section>
@@ -232,7 +286,8 @@
     const updateProductForm = document.getElementById('updateProductForm');
     let imageUrls = [];
 
-    document.getElementById('uploadImagesBtn').addEventListener('click', async function () {
+    document.getElementById('uploadImagesBtn').addEventListener('click', async function (event) {
+        event.preventDefault();
         if (!validateForm()) {
             return;
         }
@@ -308,15 +363,21 @@
             if (response.status === 200) {
                 hideLoader();
                 console.log("Product added successfully");
-                location.reload();
-                alert("Product added successfully");
+                // location.reload();
+                // alert("Product added successfully");
+                showNotification("Product added successfully!", "success", 3000);
+                setTimeout(() => {
+                    location.reload();
+                }, 3000);
             } else {
                 hideLoader();
-                alert("Failed adding the product");
+                // alert("Failed adding the product");
+                showNotification("Failed adding the product", "error", 3000);
             }
         });
         } else {
-            alert("failed saving the order");
+            // alert("failed saving the product");
+            showNotification("Failed saving the product", "error", 3000);
             uploadStatus.innerHTML = '<p>Please upload all images before submitting the form.</p>';
         }
     }
@@ -343,30 +404,35 @@
 
         // Validate Price (max 2 decimal places)
         if (!/^\d+(\.\d{1,2})?$/.test(price)) {
-            alert("Price must be a number with up to 2 decimal places.");
+            // alert("Price must be a number with up to 2 decimal places.");
+            showNotification("Price must be a number with up to 2 decimal places.", "warning", 3000);
             return false;
         }
 
         // Validate Weight (min 1.2, max 2 decimal places)
         if (!/^\d+(\.\d{1,2})?$/.test(weight) || parseFloat(weight) < 1.2) {
-            alert("Weight must be at least 1.2 and can have up to 2 decimal places.");
+            // alert("Weight must be at least 1.2 and can have up to 2 decimal places.");
+            showNotification("Weight must be at least 1.2 and can have up to 2 decimal places.", "warning", 3000);
             return false;
         }
 
         // Validate Memory (must be an integer)
         if (!/^\d+$/.test(memory)) {
-            alert("Memory must be an integer.");
+            // alert("Memory must be an integer.");
+            showNotification("Memory must be an integer.", "warning", 3000);
             return false;
         }
 
         // Validate Battery Life (must be an integer)
         if (!/^\d+$/.test(batteryLife)) {
-            alert("Battery life must be an integer.");
+            // alert("Battery life must be an integer.");
+            showNotification("Battery life must be an integer.", "warning", 3000);
             return false;
         }
 
         if (!/^\d+$/.test(stock)) {
-            alert("Stock must be an integer.");
+            // alert("Stock must be an integer.");
+            showNotification("Stock must be an integer.", "warning", 3000);
             return false;
         }
         // If all validations pass, return true to allow form submission
@@ -374,6 +440,7 @@
     }
 
 </script>
+<script src="/../assets/js/notifications.js"></script>
 <script src="../assets/js/vendor/jquery-2.2.4.min.js"></script>
 <script src="../assets/js/vendor/bootstrap.min.js"></script>
 <script src="../assets/js/main.js"></script>

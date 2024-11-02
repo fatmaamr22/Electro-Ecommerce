@@ -104,9 +104,8 @@ public class OrderService {
         }
     }
 
-    public OrderDTO updateOrderState(int id, OrderState state) {
-        Order order =  orderRepo.updateOrderState(state, id);
-        return OrderMapper.INSTANCE.toDTO(order);
+    public void updateOrderState(OrderState state, int id) {
+        orderRepo.updateOrderState(state, id);
     }
 
 }

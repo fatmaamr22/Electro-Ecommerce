@@ -31,6 +31,8 @@
 	<link rel="stylesheet" href="../../assets/css/main.css">
 	<link rel="stylesheet" href="../../assets/css/all.css">
 	<link rel="stylesheet" href="../../assets/css/style.css">
+
+
 </head>
 
 <body>
@@ -47,6 +49,10 @@
 						><img src="../../assets/img/electro-logo.png" alt="" class="logo-image"
 						/></a>
 					</div>
+					<%
+						String baseUrl = request.getScheme() + "://" + request.getServerName() +
+								(request.getServerPort() == 80 || request.getServerPort() == 443 ? "" : ":" + request.getServerPort());
+					%>
 
 					<button
 							class="navbar-toggler"
@@ -119,7 +125,7 @@
 						<div class="hover">
 							<h4>New to our website?</h4>
 							<p>There are advances being made in science and technology everyday, and a good example of this is the</p>
-							<a class="primary-btn" href="registration.jsp">Create an Account</a>
+							<a class="primary-btn" href="/auth/registration.jsp">Create an Account</a>
 						</div>
 					</div>
 				</div>
@@ -142,13 +148,21 @@
 							<div class="col-md-12 form-group">
 								<button type="submit" value="submit" class="primary-btn">Log In</button>
 							</div>
+
+							<!-- Centering Google sign-in -->
+							<div class="col-md-12 form-group text-center">
+									<a id="google-signin" href="https://accounts.google.com/o/oauth2/v2/auth?redirect_uri=<%= baseUrl %>/auth/grantcode&response_type=code&client_id=820523978692-81smkoloveoe7jqav826cp63sgd2201a.apps.googleusercontent.com&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid&access_type=offline">
+										<img src="https://developers.google.com/identity/images/g-logo.png" alt="Google Logo" style="height: 20px; margin-right: 10px;">
+										Sign in with Google
+									</a>
+							</div>
+
 							<div class="col-md-12 form-group">
 								<c:if test="${not empty loginErrorResponse}">
 									<div id="loginError" class="text-danger">${loginErrorResponse}</div>
 								</c:if>
 							</div>
 						</form>
-
 					</div>
 				</div>
 			</div>
@@ -172,6 +186,9 @@
 	<script src="../../assets/js/jquery.magnific-popup.min.js"></script>
 	<script src="../../assets/js/owl.carousel.min.js"></script>
 	<!--gmaps Js-->
+	<script src="https://apis.google.com/js/platform.js" async defer></script>
+	<meta name="google-signin-client_id" content="820523978692-81smkoloveoe7jqav826cp63sgd2201a.apps.googleusercontent.com.apps.googleusercontent.com">
+
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjCGmQ0Uq4exrzdcL6rvxywDDOvfAu6eE"></script>
 	<script src="../../assets/js/gmaps.min.js"></script>
 	<script src="../../assets/js/main.js"></script>

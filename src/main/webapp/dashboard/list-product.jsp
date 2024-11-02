@@ -17,6 +17,57 @@
             cursor: not-allowed;
             opacity: 0.65;
         }
+
+        /* Notification Container */
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* Notification Styling */
+        .notification {
+            background-color: #4caf50;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 5px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            opacity: 1;
+            cursor: pointer;
+            transition: opacity 0.5s ease;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Different colors for notification types */
+        .notification.success { background-color: #4caf50; }
+        .notification.error { background-color: #f44336; }
+        .notification.warning { background-color: #ff9800; }
+
+        /* Dismiss button */
+        .notification .dismiss {
+            margin-left: 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Fade In and Out Animations */
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fade-out {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
     </style>
 </head>
 
@@ -96,6 +147,8 @@
         </tbody>
     </table>
 
+    <div id="notification-container" class="notification-container"></div>
+
     <!-- Pagination -->
     <nav aria-label="Page navigation">
         <ul class="pagination">
@@ -133,14 +186,20 @@
             method: 'DELETE',
         }).then(response => {
             if (response.ok) {
-                alert('Product deleted successfully');
-                window.location.reload();
+                // alert('Product deleted successfully');
+                // window.location.reload();
+                showNotification("Product deleted successfully!", "success", 3000);
+                setTimeout(() => {
+                    window.location.reload();
+                }, 3000);
             } else {
-                alert('Failed to delete the product');
+                // alert('Failed to delete the product');
+                showNotification("Failed to delete the product", "error", 3000);
             }
         }).catch(error => {
             console.error('Error:', error);
-            alert('An error occurred while trying to delete the product');
+            // alert('An error occurred while trying to delete the product');
+            showNotification("An error occurred while trying to delete the product", "error", 3000);
         });
     }
 
@@ -156,7 +215,7 @@
     }
 
 </script>
-
+<script src="/../assets/js/notifications.js"></script>
 <script src="../assets/js/vendor/jquery-2.2.4.min.js"></script>
 <script src="../assets/js/vendor/bootstrap.min.js"></script>
 <script src="../assets/js/main.js"></script>

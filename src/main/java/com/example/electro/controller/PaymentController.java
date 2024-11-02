@@ -30,14 +30,13 @@ public class PaymentController {
                 .getAsString());
 
         if(state){
-            orderService.updateOrderState(orderId, OrderState.PROCESSING);
+            orderService.updateOrderState(OrderState.PROCESSING, orderId);
             return "index";
         } else {
-            orderService.updateOrderState(orderId, OrderState.CANCELLED);
+            orderService.updateOrderState(OrderState.CANCELLED, orderId);
             model.addAttribute("message", "Payment Failed");
             model.addAttribute("status", 503);
             return "error";
         }
     }
-
 }
