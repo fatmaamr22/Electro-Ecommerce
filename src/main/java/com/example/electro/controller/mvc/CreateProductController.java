@@ -1,6 +1,5 @@
-package com.example.electro.controller;
+package com.example.electro.controller.mvc;
 
-import com.example.electro.service.CategoryService;
 import com.example.electro.service.FilterService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

@@ -45,6 +45,10 @@
                     ><img src="../../assets/img/electro-logo.png" alt="" class="logo-image"
                     /></a>
                 </div>
+                <%
+                    String baseUrl = request.getScheme() + "://" + request.getServerName() +
+                            (request.getServerPort() == 80 || request.getServerPort() == 443 ? "" : ":" + request.getServerPort());
+                %>
 
                 <button
                         class="navbar-toggler"
@@ -169,7 +173,7 @@
                             <button type="submit" class="primary-btn">Register</button>
                         </div>
                         <div class="col-md-12 form-group text-center">
-                            <a id="google-signin" href="https://accounts.google.com/o/oauth2/v2/auth?redirect_uri=http://localhost:8080/auth/grantcode&response_type=code&client_id=820523978692-81smkoloveoe7jqav826cp63sgd2201a.apps.googleusercontent.com&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid&access_type=offline">
+                            <a id="google-signin" href="https://accounts.google.com/o/oauth2/v2/auth?redirect_uri=<%= baseUrl %>/auth/grantcode&response_type=code&client_id=820523978692-81smkoloveoe7jqav826cp63sgd2201a.apps.googleusercontent.com&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid&access_type=offline">
                                 <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google Logo" style="height: 20px; margin-right: 10px;">
                                 Sign up with Google
                             </a>

@@ -4,9 +4,7 @@ import com.example.electro.dto.OrderDTO;
 import com.example.electro.enums.OrderState;
 import com.example.electro.mapper.OrderMapper;
 import com.example.electro.model.*;
-import com.example.electro.repository.CouponRepository;
-import com.example.electro.repository.CustomerRepository;
-import com.example.electro.repository.OrderRepository;
+import com.example.electro.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,13 +18,15 @@ public class OrderService {
     private CouponRepository couponRepo;
     private CustomerRepository customerRepo;
     private CartService cartService;
+    private OrderItemRepository orderItemRepo;
 
     @Autowired
-    public OrderService(OrderRepository orderRepo, CouponRepository couponRepo, CustomerRepository customerRepo, CartService cartService) {
+    public OrderService(OrderRepository orderRepo, CouponRepository couponRepo, CustomerRepository customerRepo, CartService cartService, OrderItemRepository orderItemRepo) {
         this.orderRepo = orderRepo;
         this.couponRepo = couponRepo;
         this.customerRepo = customerRepo;
         this.cartService = cartService;
+        this.orderItemRepo = orderItemRepo;
     }
 
     public List<OrderDTO> getAllOrders(int pageNo, int size) {
@@ -71,7 +71,7 @@ public class OrderService {
             Order order = new Order();
             order.setCustomer(customer);
             for (CartHasProduct cartHasProduct : cartHasProducts) {
-                cartHasProduct.getProduct().setStock(cartHasProduct.getProduct().getStock() - cartHasProduct.getQuantity());
+//                cartHasProduct.getProduct().setStock(cartHasProduct.getProduct().getStock() - cartHasProduct.getQuantity());
                 OrderItem orderItem = new OrderItem();
                 orderItem.setOrder(order);
                 orderItem.setProduct(cartHasProduct.getProduct());
@@ -96,12 +96,22 @@ public class OrderService {
                 }
             }
             order.setState(OrderState.PENDING);
-            cartService.emptyCart(customer.getId());
+//            cartService.emptyCart(customer.getId());
             return orderRepo.saveOrder(order, orderItems);
         } else {
             System.out.println("No Enough Stock for " + product.getName());
             throw new RuntimeException("No Enough Stock for " + product.getName());
         }
+    }
+
+    public void updateProductStock(int orderId) {
+        Order order = orderRepo.findById(orderId).get();
+        for (OrderItem orderItem : order.getOrderItems()) {
+            System.out.println("-------------Stock before : " + orderItem.getProduct().getStock());
+            orderItem.getProduct().setStock(orderItem.getProduct().getStock() - orderItem.getQuantity());
+            System.out.println("--------------Stock after : " + orderItem.getProduct().getStock());
+        }
+        orderItemRepo.saveAll(order.getOrderItems());
     }
 
     public void updateOrderState(OrderState state, int id) {

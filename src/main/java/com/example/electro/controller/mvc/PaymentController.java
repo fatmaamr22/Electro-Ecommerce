@@ -1,6 +1,7 @@
-package com.example.electro.controller;
+package com.example.electro.controller.mvc;
 
 import com.example.electro.enums.OrderState;
+import com.example.electro.service.CartService;
 import com.example.electro.service.OrderService;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -13,9 +14,11 @@ import org.springframework.web.bind.annotation.*;
 public class PaymentController {
 
     private final OrderService orderService;
+    private final CartService cartService;
 
-    public PaymentController(OrderService orderService) {
+    public PaymentController(OrderService orderService, CartService cartService) {
         this.orderService = orderService;
+        this.cartService = cartService;
     }
 
     @PostMapping
@@ -31,6 +34,8 @@ public class PaymentController {
 
         if(state){
             orderService.updateOrderState(OrderState.PROCESSING, orderId);
+            orderService.updateProductStock(orderId);
+            cartService.emptyCart(orderService.getOrderById(orderId).getCustomer().getId());
             return "index";
         } else {
             orderService.updateOrderState(OrderState.CANCELLED, orderId);
