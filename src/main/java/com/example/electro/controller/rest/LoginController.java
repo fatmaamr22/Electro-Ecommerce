@@ -1,4 +1,4 @@
-package com.example.electro.controller;
+package com.example.electro.controller.rest;
 
 import com.example.electro.customDetails.CustomUserDetails;
 import com.example.electro.model.Customer;
@@ -26,18 +26,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @RestController
 public class LoginController {
-
 
     @Autowired
     CustomerService customerService;

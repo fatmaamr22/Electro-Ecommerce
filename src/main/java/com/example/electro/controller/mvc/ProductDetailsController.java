@@ -1,4 +1,4 @@
-package com.example.electro.controller;
+package com.example.electro.controller.mvc;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

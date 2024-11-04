@@ -1,4 +1,4 @@
-package com.example.electro.controller;
+package com.example.electro.controller.rest;
 
 
 import com.example.electro.dto.ProductDTO;

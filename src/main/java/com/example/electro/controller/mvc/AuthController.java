@@ -1,4 +1,4 @@
-package com.example.electro.controller;
+package com.example.electro.controller.mvc;
 
 import com.example.electro.customDetails.CustomAdminDetails;
 import com.example.electro.customDetails.CustomUserDetails;
@@ -21,7 +21,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;

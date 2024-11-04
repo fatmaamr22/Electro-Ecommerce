@@ -1,4 +1,4 @@
-package com.example.electro.controller;
+package com.example.electro.controller.mvc;
 
 import com.example.electro.dto.CustomerDTO;
 import com.example.electro.service.CustomerService;
