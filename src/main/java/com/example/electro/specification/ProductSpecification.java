@@ -1,69 +1,140 @@
 package com.example.electro.specification;
 
 import com.example.electro.model.Product;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import org.springframework.data.jpa.domain.Specification;
-
-import jakarta.persistence.criteria.Join;
-import jakarta.persistence.criteria.JoinType;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProductSpecification {
-    public static Specification<Product> withFilters(String searchInput ,List<Integer> categories, List<String> brands,
-                                                     List<String> processors,List<String> operatingSystem, List<Integer> memoryOptions,
-                                                     Integer minPrice, Integer maxPrice,Boolean deleted) {
-        return (Root<Product> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
-            List<Predicate> predicates = new ArrayList<>();
 
-            if (deleted != null){
-                predicates.add(criteriaBuilder.equal(root.get("deleted"), deleted));
-            }
-            // Filter by Category
-            if (categories != null && !categories.isEmpty()) {
-                predicates.add(root.get("category").get("id").in(categories));
-            }
+    // Base specifications
+    public static class ProductSpecifications {
+        public static Specification<Product> hasDeletedStatus(Boolean deleted) {
+            return (root, query, cb) -> deleted == null ? null :
+                    cb.equal(root.get("deleted"), deleted);
+        }
 
-            // Filter by Brand Name
-            if (brands != null && !brands.isEmpty()) {
-                predicates.add(root.get("brandName").in(brands));
-            }
+        public static Specification<Product> inCategories(List<Integer> categories) {
+            return (root, query, cb) -> categories == null || categories.isEmpty() ? null :
+                    root.get("category").get("id").in(categories);
+        }
 
-            // Join with ProductSpecs entity to filter by processor
-            if (processors != null && !processors.isEmpty()) {
+        public static Specification<Product> hasBrands(List<String> brands) {
+            return (root, query, cb) -> brands == null || brands.isEmpty() ? null :
+                    root.get("brandName").in(brands);
+        }
+
+        public static Specification<Product> hasProcessors(List<String> processors) {
+            return (root, query, cb) -> {
+                if (processors == null || processors.isEmpty()) return null;
                 Join<Object, Object> specsJoin = root.join("specs", JoinType.INNER);
-                predicates.add(specsJoin.get("processor").in(processors));
-            }
-            if (operatingSystem != null && !operatingSystem.isEmpty()) {
+                return specsJoin.get("processor").in(processors);
+            };
+        }
+
+        public static Specification<Product> hasOperatingSystem(List<String> operatingSystems) {
+            return (root, query, cb) -> {
+                if (operatingSystems == null || operatingSystems.isEmpty()) return null;
                 Join<Object, Object> specsJoin = root.join("specs", JoinType.INNER);
-                predicates.add(specsJoin.get("os").in(operatingSystem));
-            }
+                return specsJoin.get("os").in(operatingSystems);
+            };
+        }
 
-            // Filter by Memory from ProductSpecs
-            if (memoryOptions != null && !memoryOptions.isEmpty()) {
+        public static Specification<Product> hasMemoryOptions(List<Integer> memoryOptions) {
+            return (root, query, cb) -> {
+                if (memoryOptions == null || memoryOptions.isEmpty()) return null;
                 Join<Object, Object> specsJoin = root.join("specs", JoinType.INNER);
-                predicates.add(specsJoin.get("memory").in(memoryOptions));
-            }
+                return specsJoin.get("memory").in(memoryOptions);
+            };
+        }
 
-            // Filter by Price Range
-            if (minPrice != null) {
-                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("price"), minPrice));
-            }
-            if (maxPrice != null) {
-                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("price"), maxPrice));
-            }
-            if (searchInput != null && !searchInput.trim().isEmpty()) {
-                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + searchInput.toLowerCase() + "%"));
-            }
+        public static Specification<Product> isPriceInRange(Integer minPrice, Integer maxPrice) {
+            return (root, query, cb) -> {
+                List<Predicate> predicates = new ArrayList<>();
+                if (minPrice != null) {
+                    predicates.add(cb.greaterThanOrEqualTo(root.get("price"), minPrice));
+                }
+                if (maxPrice != null) {
+                    predicates.add(cb.lessThanOrEqualTo(root.get("price"), maxPrice));
+                }
+                return predicates.isEmpty() ? null : cb.and(predicates.toArray(new Predicate[0]));
+            };
+        }
 
-            // Build final query with all predicates
-            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
-        };
+        public static Specification<Product> nameContains(String searchInput) {
+            return (root, query, cb) -> searchInput == null || searchInput.trim().isEmpty() ? null :
+                    cb.like(cb.lower(root.get("name")), "%" + searchInput.toLowerCase() + "%");
+        }
     }
 
+    public static class ProductSpecificationBuilder {
+        private String searchInput;
+        private List<Integer> categories;
+        private List<String> brands;
+        private List<String> processors;
+        private List<String> operatingSystem;
+        private List<Integer> memoryOptions;
+        private Integer minPrice;
+        private Integer maxPrice;
+        private Boolean deleted;
 
+        public ProductSpecificationBuilder withSearchInput(String searchInput) {
+            this.searchInput = searchInput;
+            return this;
+        }
+
+        public ProductSpecificationBuilder withCategories(List<Integer> categories) {
+            this.categories = categories;
+            return this;
+        }
+
+        public ProductSpecificationBuilder withBrands(List<String> brands) {
+            this.brands = brands;
+            return this;
+        }
+
+        public ProductSpecificationBuilder withProcessors(List<String> processors) {
+            this.processors = processors;
+            return this;
+        }
+
+        public ProductSpecificationBuilder withOperatingSystem(List<String> operatingSystem) {
+            this.operatingSystem = operatingSystem;
+            return this;
+        }
+
+        public ProductSpecificationBuilder withMemoryOptions(List<Integer> memoryOptions) {
+            this.memoryOptions = memoryOptions;
+            return this;
+        }
+
+        public ProductSpecificationBuilder withPriceRange(Integer minPrice, Integer maxPrice) {
+            this.minPrice = minPrice;
+            this.maxPrice = maxPrice;
+            return this;
+        }
+
+        public ProductSpecificationBuilder withDeleted(Boolean deleted) {
+            this.deleted = deleted;
+            return this;
+        }
+
+        public Specification<Product> build() {
+            return Specification.where(ProductSpecifications.hasDeletedStatus(deleted))
+                    .and(ProductSpecifications.inCategories(categories))
+                    .and(ProductSpecifications.hasBrands(brands))
+                    .and(ProductSpecifications.hasProcessors(processors))
+                    .and(ProductSpecifications.hasOperatingSystem(operatingSystem))
+                    .and(ProductSpecifications.hasMemoryOptions(memoryOptions))
+                    .and(ProductSpecifications.isPriceInRange(minPrice, maxPrice))
+                    .and(ProductSpecifications.nameContains(searchInput));
+        }
+    }
+
+    // Factory method for builder
+    public static ProductSpecificationBuilder builder() {
+        return new ProductSpecificationBuilder();
+    }
 }

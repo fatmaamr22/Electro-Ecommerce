@@ -1,6 +1,7 @@
 package com.example.electro.service;
 
 import com.example.electro.dto.ProductDTO;
+import com.example.electro.dto.ProductRequestDTO;
 import com.example.electro.dto.ProductWithSpecsDTO;
 import com.example.electro.mapper.*;
 import com.example.electro.model.Image;
@@ -9,8 +10,10 @@ import com.example.electro.model.ProductSpecs;
 import com.example.electro.repository.ImagesRepository;
 import com.example.electro.repository.ProductRepository;
 import com.example.electro.repository.ProductSpecsRepository;
+import com.example.electro.specification.ProductSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -35,8 +38,20 @@ public class ProductService {
     public ProductWithSpecsDTO findById(Integer id){
         return ProductWithSpecsMapper.INSTANCE.toDTO(productRepository.findById(id).get());
     }
-    public Page<ProductDTO> findAllWithSpecifications(Specification<Product> spec, Pageable pageable) {
-        return productRepository.findAll(spec, pageable)
+    public Page<ProductDTO> findAllWithSpecifications(ProductRequestDTO productRequestDTO) {
+        Specification<Product> productSpec = ProductSpecification.builder()
+                .withBrands(productRequestDTO.brands())
+                .withDeleted(false)
+                .withCategories(productRequestDTO.categories())
+                .withProcessors(productRequestDTO.processors())
+                .withMemoryOptions(productRequestDTO.memoryOptions())
+                .withPriceRange(productRequestDTO.minPrice(), productRequestDTO.maxPrice())
+                .withOperatingSystem(productRequestDTO.operatingSystem())
+                .withSearchInput(productRequestDTO.searchInput())
+                .build();
+        int pageNo = (productRequestDTO.page() > 0) ? productRequestDTO.page() - 1 : 0;
+
+        return productRepository.findAll(productSpec, PageRequest.of(pageNo, productRequestDTO.size()))
                 .map(ProductMapper.INSTANCE::toDTO);
     }
     public Page<ProductDTO> findAll(Pageable pageable) {

@@ -2,6 +2,7 @@ package com.example.electro.controller.rest;
 
 
 import com.example.electro.dto.ProductDTO;
+import com.example.electro.dto.ProductRequestDTO;
 import com.example.electro.dto.ProductWithSpecsDTO;
 import com.example.electro.model.Product;
 import com.example.electro.service.ProductService;
@@ -31,24 +32,13 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<Page<ProductDTO>> filterProducts(
-            @RequestParam(value = "category", required = false) List<Integer> categories,
-            @RequestParam(value = "brand", required = false) List<String> brands,
-            @RequestParam(value = "deleted", defaultValue = "false",required = false) Boolean deleted,
-            @RequestParam(value = "processor", required = false) List<String> processors,
-            @RequestParam(value = "memory", required = false) List<Integer> memoryOptions,
-            @RequestParam(value = "min-price", required = false) Integer minPrice,
-            @RequestParam(value = "max-price", required = false) Integer maxPrice,
-            @RequestParam(value = "os", required = false) List<String> operatingSystem,
-            @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "12") int size
+                @ModelAttribute ProductRequestDTO productRequestDTO
     ) {
 
-        Specification<Product> productSpec = ProductSpecification.withFilters(null,categories, brands, processors,operatingSystem, memoryOptions, minPrice, maxPrice,deleted);
-        int pageNo = (page > 0) ? page - 1 : 0;
-        System.out.println("deleted"+deleted);
-        Pageable pageable = PageRequest.of(pageNo, size);
 
-        Page<ProductDTO> filteredProducts = productService.findAllWithSpecifications(productSpec, pageable);
+
+
+        Page<ProductDTO> filteredProducts = productService.findAllWithSpecifications(productRequestDTO);
 
         return ResponseEntity.ok(filteredProducts);
 
